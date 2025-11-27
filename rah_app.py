@@ -286,7 +286,7 @@ def main():
     # --- MAIN CONTENT ---
     st.markdown("""
     <div class="header-container">
-        <h1>🧬 RAH Biyorezonans Asistanı</h1>
+        <h1>🧬 Dr. Sait SEVİNÇ</h1>
         <p>Dr. Sait Sevinç Kliniği İçin Özel Geliştirilmiştir<br>RAH Kompendium & Dr. Elmar Ulrich Protokolleri</p>
     </div>
     """, unsafe_allow_html=True)
@@ -377,3 +377,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
