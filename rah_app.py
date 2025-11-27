@@ -546,7 +546,7 @@ def main():
         except:
             st.markdown("### 🩺 Dr. Sait Sevinç")
 
-        st.markdown("### Biyorezonans Asistanı")
+        st.markdown("### Dr. Sait SEVİNÇ")
         st.markdown("---")
         
         st.markdown("#### ⚙️ Cihaz Seçimi")
@@ -651,3 +651,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
