@@ -3,36 +3,61 @@ import pandas as pd
 import os
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (RESTORASYON VE DÜZELTME)
+# 1. GÖRSEL TASARIM (TAMİR EDİLMİŞ CSS)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     
-    /* --- GENEL AYARLAR (ZORUNLU AYDINLIK MOD) --- */
+    /* --- 1. ANA GÖVDE ZORUNLU AYDINLIK MOD --- */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
         color: #333333 !important;
     }
     
-    /* --- SIDEBAR (SOL MENÜ) DÜZELTMESİ --- */
+    /* --- 2. SIDEBAR (SOL MENÜ) --- */
     [data-testid="stSidebar"] {
         background-color: #f8f9fa !important;
         border-right: 1px solid #e0e0e0;
     }
-    
-    /* Sidebar içindeki yazıları zorla koyu renk yap (Görünmezliği engeller) */
     [data-testid="stSidebar"] * {
         color: #2c3e50 !important;
     }
     
-    /* Sidebar'daki Radio Button seçim rengi */
-    [data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"] {
-        background-color: transparent !important;
+    /* --- 3. INPUT KUTULARI VE SELECTBOX DÜZELTMESİ (KRİTİK NOKTA) --- */
+    /* Seçim kutusunun kendisi */
+    div[data-baseweb="select"] > div {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border: 1px solid #ced4da !important;
     }
-
-    /* --- HEADER TASARIMI --- */
+    /* Seçim kutusunun içindeki yazı */
+    div[data-baseweb="select"] span {
+        color: #000000 !important;
+    }
+    /* Açılan Listenin (Dropdown) Arka Planı ve Yazısı */
+    div[data-baseweb="popover"] {
+        background-color: #ffffff !important;
+    }
+    div[data-baseweb="menu"] {
+        background-color: #ffffff !important;
+    }
+    div[data-baseweb="menu"] li {
+        color: #000000 !important;
+        background-color: #ffffff !important;
+    }
+    /* Liste üzerine gelince (Hover) */
+    div[data-baseweb="menu"] li:hover {
+        background-color: #f0f2f6 !important;
+    }
+    /* Input üzerindeki etiketler (Label) */
+    label[data-testid="stWidgetLabel"] p {
+        color: #2c3e50 !important;
+        font-weight: 600 !important;
+    }
+    
+    /* --- 4. HEADER TASARIMI --- */
     .header-container {
         background: linear-gradient(135deg, #2980b9 0%, #2c3e50 100%);
         padding: 1.5rem;
@@ -57,7 +82,7 @@ def local_css():
         opacity: 0.9;
     }
 
-    /* --- HASTALIK KARTI --- */
+    /* --- 5. KARTLAR --- */
     .disease-card {
         background: white;
         border: 1px solid #eee;
@@ -70,7 +95,6 @@ def local_css():
     .disease-card h2 { color: #2c3e50 !important; margin-top:0; }
     .disease-card p { color: #555 !important; }
     
-    /* --- ULRICH KARTI --- */
     .ulrich-card {
         background: #fff9db;
         border: 1px solid #f1c40f;
@@ -80,7 +104,7 @@ def local_css():
         margin-bottom: 15px;
     }
 
-    /* --- TIMELINE (ADIMLAR) --- */
+    /* --- 6. TIMELINE --- */
     .step-row {
         display: flex;
         flex-wrap: wrap;
@@ -109,7 +133,7 @@ def local_css():
         margin-right: 12px;
     }
     
-    /* --- ETİKETLER --- */
+    /* --- 7. DİĞER --- */
     .tag { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white !important; margin-left: auto; }
     .bg-blue { background-color: #3498db; }
     .bg-green { background-color: #27ae60; }
@@ -117,12 +141,10 @@ def local_css():
     .bg-red { background-color: #e74c3c; }
     .bg-gold { background-color: #f39c12; }
 
-    /* --- DEPLOY BUTONU GİZLEME --- */
     .stDeployButton {display:none;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
     
-    /* Özel Footer */
     .custom-footer {
         margin-top: 40px;
         text-align: center;
@@ -242,7 +264,7 @@ def get_rah_database():
             "source": "Source 2 (Syf 127) & Ulrich M4",
             "desc": "Kan basıncı regülasyonu.",
             "direct": ["39.60", "70.47"],
-            "compact": ["00.00", "01.00", "02.00", "31.39", "35.10", "70.47", "38.00", "39.10", "39.40", "39.50", "39.60", "64.00", "31.50", "01.00"],
+            "compact": ["00.00", "01.00", "02.00", "31.39", "35.10", "70.47", "38.00", "39.10", "39.50", "39.60", "64.00", "31.50", "01.00"],
             "ulrich": [{"code": "90.22", "name": "Hipertansiyon (Yüksek Tansiyon)"}]
         },
         "Dolaşım Bozukluğu": {
@@ -316,7 +338,7 @@ def get_rah_database():
     return db
 
 def get_program_name(code):
-    # Temel programların isimleri
+    # Standart RAH isimleri
     names = {
         "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "01.10": "Enerji Yükleme", "01.30": "Ön Kontrol (Pre-control)", "01.40": "Çakralar Komple",
         "02.00": "Akupunktur Meridyenleri",
@@ -354,9 +376,8 @@ def get_category_name(code):
     return "Tedavi"
 
 # =============================================================================
-# 3. ANA UYGULAMA (STREAMLIT)
+# 3. ANA UYGULAMA
 # =============================================================================
-
 def main():
     st.set_page_config(page_title="RAH Asistanı | Dr. Sait Sevinç", page_icon="🧬", layout="wide")
     local_css()
@@ -373,7 +394,7 @@ def main():
             st.markdown("### Dr. Sait Sevinç")
 
         st.markdown("### Profesyonel Biyorezonans Asistanı")
-        st.caption("v6.0 - Restore Edition")
+        st.caption("v6.5 - Ultimate Clean Edition")
         st.markdown("---")
         
         st.subheader("⚙️ Cihaz Ayarı")
@@ -399,10 +420,10 @@ def main():
     
     db = get_rah_database()
     
-    # Arama
-    st.markdown('<div class="search-wrapper">', unsafe_allow_html=True)
+    # Arama (Label ile düzeltilmiş)
+    st.markdown("### 🔎 Rahatsızlık veya Semptom Seçimi")
     disease_list = sorted(db.keys())
-    selected_disease = st.selectbox("Lütfen bir rahatsızlık arayın veya seçin:", [""] + disease_list)
+    selected_disease = st.selectbox("Hastalık listesinden seçim yapınız:", [""] + disease_list)
 
     if selected_disease:
         data = db[selected_disease]
@@ -410,7 +431,7 @@ def main():
         # Bilgi Kartı
         st.markdown(f"""
         <div class="disease-card">
-            <h2 style="color: #2c3e50; margin-bottom: 10px;">📌 {selected_disease}</h2>
+            <h2>📌 {selected_disease}</h2>
             <p style="font-size: 1.1rem; color: #555;">{data['desc']}</p>
             <div style="margin-top: 15px; font-size: 0.85rem; color: #888;">
                 📚 <b>Referans:</b> {data['source']}
@@ -457,7 +478,7 @@ def main():
                 with cols[i % 4]:
                     st.metric(label=f"Kod {i+1}", value=code)
 
-        # --- TAB 3: ULRICH PROTOKOLÜ (YENİ!) ---
+        # --- TAB 3: ULRICH PROTOKOLÜ ---
         with tab3:
             if "ulrich" in data:
                 st.markdown(f"##### 🧬 Dr. Elmar Ulrich Özel Modülü (M4)")
