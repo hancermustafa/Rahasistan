@@ -3,71 +3,182 @@ import pandas as pd
 import os
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (AYNI - KORUNDU)
+# 1. GÖRSEL TASARIM (ULTIMATE CSS - MOBİL & DARK MODE FIX)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
-    /* ZORUNLU AYDINLIK MOD */
-    [data-testid="stAppViewContainer"] { background-color: #ffffff !important; font-family: 'Inter', sans-serif; color: #333333 !important; }
-    h1, h2, h3, h4, h5, h6, p, div, span, label, li, button { color: #2c3e50; }
+    /* --- ZORUNLU AYDINLIK MOD (FORCE LIGHT) --- */
+    [data-testid="stAppViewContainer"] {
+        background-color: #ffffff !important;
+        font-family: 'Inter', sans-serif;
+        color: #333333 !important;
+    }
     
-    /* Metrikler */
-    div[data-testid="stMetricValue"] { color: #d35400 !important; font-size: 1.6rem !important; font-weight: 800 !important; }
-    div[data-testid="stMetricLabel"] { color: #7f8c8d !important; font-size: 0.85rem !important; font-weight: 600 !important; }
-    div[data-testid="metric-container"] { background-color: #fff; border: 1px solid #eee; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    /* Tüm yazıları koyu renk yap */
+    h1, h2, h3, h4, h5, h6, p, div, span, label, li, button {
+        color: #2c3e50; 
+    }
 
-    /* Sidebar */
-    [data-testid="stSidebar"] { background-color: #f4f6f8 !important; border-right: 1px solid #e0e0e0; }
-    [data-testid="stSidebar"] * { color: #2c3e50 !important; }
-    .stRadio label { color: #2c3e50 !important; font-weight: 600; }
+    /* --- MOBİL UYUMLULUK AYARLARI --- */
+    @media only screen and (max-width: 768px) {
+        .header-container { padding: 1.5rem !important; }
+        .header-container h1 { font-size: 1.5rem !important; }
+        /* Mobilde menü aşağı taşmasın, kaydırılabilsin */
+        ul[data-baseweb="menu"] {
+            max-height: 250px !important;
+            overflow-y: auto !important;
+        }
+        /* Telefondaki klavye açılınca alan kalsın */
+        div[data-baseweb="select"] { margin-bottom: 20px !important; }
+    }
 
-    /* Form Elemanları */
-    div[data-baseweb="select"] > div { background-color: #ffffff !important; border: 2px solid #dce1e6 !important; color: #333 !important; }
-    div[data-baseweb="select"] span { color: #333 !important; }
-    ul[data-baseweb="menu"] { background-color: #ffffff !important; }
-    li[role="option"] { color: #333 !important; background-color: #ffffff !important; }
-    li[role="option"]:hover { background-color: #fff3e0 !important; font-weight: bold; }
+    /* --- INPUT VE MENÜ (KARA KUTU SORUNU ÇÖZÜMÜ) --- */
+    div[data-baseweb="select"] > div {
+        background-color: #ffffff !important;
+        border: 2px solid #dce1e6 !important;
+        color: #333 !important;
+        border-radius: 8px;
+    }
+    div[data-baseweb="select"] span {
+        color: #333 !important;
+    }
+    ul[data-baseweb="menu"] {
+        background-color: #ffffff !important;
+        border: 1px solid #eee !important;
+    }
+    li[role="option"] {
+        color: #333 !important;
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #f9f9f9;
+    }
+    li[role="option"]:hover, li[aria-selected="true"] {
+        background-color: #fff3e0 !important;
+        color: #d35400 !important;
+        font-weight: bold;
+    }
     
-    /* Tablar */
-    .stTabs [data-baseweb="tab-list"] { gap: 5px; }
-    .stTabs [data-baseweb="tab"] { height: 45px; background-color: #f1f2f6 !important; color: #57606f !important; border-radius: 6px 6px 0 0; font-weight: 600; border: 1px solid #e0e0e0; border-bottom: none; }
-    .stTabs [aria-selected="true"] { background-color: #ffffff !important; color: #e67e22 !important; border-top: 3px solid #e67e22 !important; }
+    /* --- SEKMELER (TABS) --- */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: auto;
+        min-height: 45px;
+        background-color: #f1f2f6 !important;
+        color: #57606f !important;
+        border-radius: 6px 6px 0 0;
+        font-weight: 600;
+        border: 1px solid #e0e0e0;
+        border-bottom: none;
+        padding: 10px 15px;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #ffffff !important;
+        color: #e67e22 !important; /* Turuncu */
+        border-top: 3px solid #e67e22 !important;
+    }
 
-    /* Header */
-    .header-container { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 2rem; border-radius: 12px; color: white !important; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin-bottom: 30px; border-bottom: 5px solid #e67e22; text-align: center; }
-    .header-container h1 { color: white !important; margin: 0; font-size: 1.8rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
+    /* --- HEADER (BAŞLIK) --- */
+    .header-container {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        padding: 2rem;
+        border-radius: 12px;
+        color: white !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        margin-bottom: 30px;
+        border-bottom: 5px solid #e67e22;
+        text-align: center;
+    }
+    .header-container h1 { margin: 0; color: white !important; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
     .header-container p { color: #bdc3c7 !important; margin-top: 5px; font-size: 0.9rem; }
 
-    /* Kartlar */
-    .disease-card { background: white; border: 1px solid #eee; border-left: 6px solid #e67e22; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-    .ulrich-card { background: #fff9db; border: 1px solid #f1c40f; padding: 15px; border-radius: 8px; color: #5d4037 !important; }
-    .ulrich-card b { color: #d35400 !important; }
+    /* --- KARTLAR --- */
+    .disease-card {
+        background: white;
+        border: 1px solid #eee;
+        border-left: 6px solid #e67e22;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+    .ulrich-card {
+        background: #fff9db;
+        border: 1px solid #f1c40f;
+        padding: 15px;
+        border-radius: 8px;
+        color: #5d4037 !important;
+    }
 
-    /* Timeline */
-    .step-row { display: flex; flex-wrap: wrap; align-items: center; background: white; border: 1px solid #f0f0f0; margin-bottom: 8px; padding: 10px 15px; border-radius: 8px; transition: transform 0.2s; }
-    .step-row:hover { border-color: #e67e22; transform: translateX(3px); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .code-pill { background: #2c3e50; color: #fff !important; font-family: 'Courier New', monospace; font-weight: bold; padding: 5px 12px; border-radius: 5px; min-width: 80px; text-align: center; margin-right: 15px; font-size: 1.1rem; }
+    /* --- TIMELINE (ADIMLAR) --- */
+    .step-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        background: white;
+        border: 1px solid #f0f0f0;
+        margin-bottom: 8px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+    .step-row:hover {
+        border-color: #e67e22;
+        transform: translateX(3px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .code-pill {
+        background: #2c3e50;
+        color: #fff !important;
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        padding: 5px 12px;
+        border-radius: 5px;
+        min-width: 80px;
+        text-align: center;
+        margin-right: 15px;
+        font-size: 1.1rem;
+    }
     
+    /* --- SIDEBAR --- */
+    [data-testid="stSidebar"] {
+        background-color: #f4f6f8 !important;
+        border-right: 1px solid #e0e0e0;
+    }
+    [data-testid="stSidebar"] * {
+        color: #2c3e50 !important;
+    }
+    .stRadio label {
+        color: #2c3e50 !important;
+        font-weight: 600;
+    }
+
+    /* --- DOĞRUDAN KODLAR (METRİK) --- */
+    div[data-testid="stMetricValue"] { color: #d35400 !important; font-size: 1.6rem !important; }
+    div[data-testid="metric-container"] { background-color: #fff; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+    /* --- ETİKETLER --- */
     .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white !important; margin-left: auto; }
     .bg-blue { background-color: #3498db; }
     .bg-green { background-color: #27ae60; }
     .bg-purple { background-color: #9b59b6; }
     .bg-red { background-color: #e74c3c; }
-    .bg-gold { background-color: #f39c12; }
 
+    /* GİZLEME */
     .stDeployButton, footer, header {visibility: hidden;}
     .custom-footer { margin-top: 50px; text-align: center; color: #95a5a6 !important; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
 # =============================================================================
-# 2. VERİTABANI (TAM KAPSAMLI - EKSİKSİZ)
+# 2. VERİTABANI (TAM KAPSAMLI - ULRICH + RAH)
 # =============================================================================
 def get_rah_database():
-    # RAH Source 2 (Bölüm 18 Tüm Liste) + Ulrich (4.01 - 4.22)
+    # RAH Source 2 (Syf 104-207) ve Dr. Ulrich Modülü (4.01-4.22)
     db = {
         # --- A ---
         "Ağır Metal Detoksu": {
@@ -85,7 +196,7 @@ def get_rah_database():
             "ulrich": [{"code": "4.01", "name": "Alerji Programı"}, {"code": "4.14", "name": "Temizleme (Clearing)"}]
         },
         "Alzheimer": {
-            "source": "RAH (Syf 170)",
+            "source": "RAH (Syf 170) + Ulrich (4.04)",
             "desc": "Bellek kaybı ve kognitif destek.",
             "direct": ["55.30"],
             "compact": ["00.00", "01.00", "02.00", "31.34", "31.35", "35.10", "70.10", "38.10", "39.10", "50.10", "54.00", "55.30", "55.42", "72.00", "75.10", "31.50", "01.00"],
@@ -139,7 +250,7 @@ def get_rah_database():
             "desc": "Genel direnç artırma.",
             "direct": ["35.10"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "34.00", "35.10", "35.11", "36.50", "31.50", "01.00"],
-            "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon Koruma"}]
+            "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon Koruma"}, {"code": "90.56", "name": "Bağışıklık Sistemi"}]
         },
         "Baş Ağrısı": {
             "source": "RAH (Syf 174) + Ulrich (4.40)",
@@ -194,7 +305,8 @@ def get_rah_database():
             "source": "RAH (Syf 137)",
             "desc": "Viral enfeksiyon sonrası toparlanma.",
             "direct": ["43.52"],
-            "compact": ["00.00", "01.00", "02.00", "31.11", "35.10", "22.93", "70.17", "42.70", "43.10", "43.30", "43.50", "43.52", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.11", "35.10", "22.93", "70.17", "42.70", "43.10", "43.30", "43.50", "43.52", "31.50", "01.00"],
+            "ulrich": [{"code": "90.48", "name": "Enfeksiyon Desteği"}]
         },
         "Crohn Hastalığı": {
             "source": "RAH (Syf 146)",
@@ -223,7 +335,7 @@ def get_rah_database():
             "desc": "Ruhsal çöküntü ve enerji düşüklüğü.",
             "direct": ["72.10"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "48.10", "64.10", "64.28", "64.29", "72.10", "75.10", "31.50", "01.00"],
-            "ulrich": [{"code": "4.16", "name": "Kundalini (Enerji) Stresi"}]
+            "ulrich": [{"code": "4.16", "name": "Kundalini (Enerji) Stresi"}, {"code": "90.58", "name": "Depresyon"}]
         },
         "Diş Eti İltihabı (Periodontitis)": {
             "source": "RAH (Syf 144) + Ulrich (4.11)",
@@ -249,7 +361,7 @@ def get_rah_database():
 
         # --- E ---
         "Elektrosmog / Radyasyon": {
-            "source": "Ulrich (4.03) + RAH (Syf 80)",
+            "source": "Ulrich (4.03) + RAH",
             "desc": "Elektromanyetik alan yüklemesi.",
             "direct": ["22.00"],
             "compact": ["00.00", "01.00", "02.00", "22.00", "22.10", "22.90", "31.10", "31.50", "01.00"],
@@ -302,7 +414,7 @@ def get_rah_database():
             "desc": "Viral enfeksiyonlar.",
             "direct": ["70.46", "43.11"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.46", "36.00", "42.10", "43.11", "31.50", "01.00"],
-            "ulrich": [{"code": "4.01", "name": "Alerji/Enfeksiyon (Temel)"}]
+            "ulrich": [{"code": "4.01", "name": "Alerji/Enfeksiyon"}]
         },
         "Gut Hastalığı": {
             "source": "RAH (Syf 154) + Ulrich (4.07)",
@@ -448,6 +560,13 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.00", "31.40", "35.10", "71.11", "71.50", "52.00", "52.20", "53.23", "53.25", "53.41", "53.70", "72.05", "75.10", "31.50", "01.00"],
             "ulrich": [{"code": "4.21", "name": "Sırt Ağrısı / Omurga"}]
         },
+        "Spor Yaralanmaları": {
+            "source": "RAH (Syf 156) + Ulrich (4.22)",
+            "desc": "Burkulma, ezilme, travma.",
+            "direct": ["53.21"],
+            "compact": ["00.00", "01.00", "02.00", "31.39", "31.40", "35.10", "53.21", "53.22", "53.24", "31.50", "01.00"],
+            "ulrich": [{"code": "4.22", "name": "Skar / Yara İzi"}]
+        },
         "Stres / Tükenmişlik": {
             "source": "RAH (Syf 207) + Ulrich (4.02)",
             "desc": "Sinirsel gerginlik ve rahatlama.",
@@ -500,11 +619,12 @@ def get_rah_database():
     return db
 
 def get_program_name(code):
+    # Temel programların isimleri
     names = {
         "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "01.10": "Enerji Yükleme", "01.30": "Ön Kontrol", "01.40": "Çakralar Komple",
         "02.00": "Akupunktur Meridyenleri", "07.21": "Demir Metabolizması",
         "22.00": "Elektrosmog", "22.90": "Radyasyon Yükü", "24.10": "Borreliosis",
-        "31.10": "ATP Üretimi", "31.50": "Temel Detoks", "31.60": "Detoks Karaciğer",
+        "31.10": "ATP Üretimi", "31.50": "Temel Detoks", "31.60": "Detoks Karaciğer", "31.81": "Yara İzi Tedavisi",
         "35.10": "Bağışıklık Artırma", "35.20": "Alerji Temel",
         "70.45": "Migren Patojen", "70.47": "Tansiyon Düşürme"
     }
@@ -518,6 +638,7 @@ def get_duration(code):
     return "5 dk"
 
 def get_category_class(code):
+    # CSS sınıfı döndürür
     if code.startswith("01.") or code.startswith("02."): return "bg-blue" 
     if code.startswith("31.5") or code.startswith("31.6"): return "bg-green" 
     if code.startswith("70."): return "bg-purple" 
@@ -546,7 +667,7 @@ def main():
         except:
             st.markdown("### 🩺 Dr. Sait Sevinç")
 
-        st.markdown("### Dr. Sait SEVİNÇ")
+        st.markdown("### Biyorezonans Asistanı")
         st.markdown("---")
         
         st.markdown("#### ⚙️ Cihaz Seçimi")
@@ -571,6 +692,7 @@ def main():
     st.markdown('<h3 style="color:#2c3e50; margin-bottom:10px;">🔎 Rahatsızlık Seçimi</h3>', unsafe_allow_html=True)
     disease_list = sorted(db.keys())
     selected_disease = st.selectbox("Listeden seçim yapınız:", [""] + disease_list)
+    st.write("") # Mobilde aşağı açılması için boşluk
 
     if selected_disease:
         data = db[selected_disease]
@@ -651,4 +773,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
