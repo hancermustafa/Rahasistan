@@ -3,42 +3,50 @@ import pandas as pd
 import os
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (AYNI KALDI - SORUNSUZ ÇALIŞAN VERSİYON)
+# 1. GÖRSEL TASARIM (AYNI - KORUNDU)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
+    /* ZORUNLU AYDINLIK MOD */
     [data-testid="stAppViewContainer"] { background-color: #ffffff !important; font-family: 'Inter', sans-serif; color: #333333 !important; }
     h1, h2, h3, h4, h5, h6, p, div, span, label, li, button { color: #2c3e50; }
     
+    /* Metrikler */
     div[data-testid="stMetricValue"] { color: #d35400 !important; font-size: 1.6rem !important; font-weight: 800 !important; }
     div[data-testid="stMetricLabel"] { color: #7f8c8d !important; font-size: 0.85rem !important; font-weight: 600 !important; }
     div[data-testid="metric-container"] { background-color: #fff; border: 1px solid #eee; padding: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
+    /* Sidebar */
     [data-testid="stSidebar"] { background-color: #f4f6f8 !important; border-right: 1px solid #e0e0e0; }
     [data-testid="stSidebar"] * { color: #2c3e50 !important; }
     .stRadio label { color: #2c3e50 !important; font-weight: 600; }
 
+    /* Form Elemanları */
     div[data-baseweb="select"] > div { background-color: #ffffff !important; border: 2px solid #dce1e6 !important; color: #333 !important; }
     div[data-baseweb="select"] span { color: #333 !important; }
     ul[data-baseweb="menu"] { background-color: #ffffff !important; }
     li[role="option"] { color: #333 !important; background-color: #ffffff !important; }
     li[role="option"]:hover { background-color: #fff3e0 !important; font-weight: bold; }
     
+    /* Tablar */
     .stTabs [data-baseweb="tab-list"] { gap: 5px; }
     .stTabs [data-baseweb="tab"] { height: 45px; background-color: #f1f2f6 !important; color: #57606f !important; border-radius: 6px 6px 0 0; font-weight: 600; border: 1px solid #e0e0e0; border-bottom: none; }
     .stTabs [aria-selected="true"] { background-color: #ffffff !important; color: #e67e22 !important; border-top: 3px solid #e67e22 !important; }
 
+    /* Header */
     .header-container { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 2rem; border-radius: 12px; color: white !important; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin-bottom: 30px; border-bottom: 5px solid #e67e22; text-align: center; }
     .header-container h1 { color: white !important; margin: 0; font-size: 1.8rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
     .header-container p { color: #bdc3c7 !important; margin-top: 5px; font-size: 0.9rem; }
 
+    /* Kartlar */
     .disease-card { background: white; border: 1px solid #eee; border-left: 6px solid #e67e22; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
     .ulrich-card { background: #fff9db; border: 1px solid #f1c40f; padding: 15px; border-radius: 8px; color: #5d4037 !important; }
     .ulrich-card b { color: #d35400 !important; }
 
+    /* Timeline */
     .step-row { display: flex; flex-wrap: wrap; align-items: center; background: white; border: 1px solid #f0f0f0; margin-bottom: 8px; padding: 10px 15px; border-radius: 8px; transition: transform 0.2s; }
     .step-row:hover { border-color: #e67e22; transform: translateX(3px); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     .code-pill { background: #2c3e50; color: #fff !important; font-family: 'Courier New', monospace; font-weight: bold; padding: 5px 12px; border-radius: 5px; min-width: 80px; text-align: center; margin-right: 15px; font-size: 1.1rem; }
@@ -56,15 +64,22 @@ def local_css():
     """, unsafe_allow_html=True)
 
 # =============================================================================
-# 2. VERİTABANI (TAM KAPSAMLI - EKSİKSİZ LİSTE)
+# 2. VERİTABANI (TAM KAPSAMLI - EKSİKSİZ)
 # =============================================================================
 def get_rah_database():
-    # RAH Source 2 (Ch 18) + Dr. Ulrich (4.01 - 4.22 Tam Liste)
+    # RAH Source 2 (Bölüm 18 Tüm Liste) + Ulrich (4.01 - 4.22)
     db = {
         # --- A ---
+        "Ağır Metal Detoksu": {
+            "source": "RAH (Syf 149) + Ulrich (4.14)",
+            "desc": "Vücuttan ağır metallerin atılımı.",
+            "direct": ["31.60", "31.50"],
+            "compact": ["00.00", "01.00", "02.00", "31.10", "31.50", "31.60", "31.61", "09.34", "44.10", "48.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}]
+        },
         "Alerji (Genel)": {
             "source": "RAH (Syf 121) + Ulrich (4.01)",
-            "desc": "Alerjik reaksiyonlar, histamin dengesi.",
+            "desc": "Alerjik reaksiyonlar ve histamin dengesi.",
             "direct": ["35.20", "64.27"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "34.00", "35.10", "35.20", "36.00", "64.27", "31.50", "01.00"],
             "ulrich": [{"code": "4.01", "name": "Alerji Programı"}, {"code": "4.14", "name": "Temizleme (Clearing)"}]
@@ -134,10 +149,18 @@ def get_rah_database():
             "ulrich": [{"code": "4.40", "name": "Baş Ağrısı / Migren"}]
         },
         "Bel Ağrısı (Lumbago)": {
-            "source": "RAH (Syf 166)",
+            "source": "RAH (Syf 166) + Ulrich (4.21)",
             "desc": "Bel bölgesi ağrıları.",
             "direct": ["53.83"],
-            "compact": ["00.00", "01.00", "02.00", "31.40", "35.10", "52.25", "53.23", "53.41", "53.73", "53.83", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.40", "35.10", "52.25", "53.23", "53.41", "53.73", "53.83", "31.50", "01.00"],
+            "ulrich": [{"code": "4.21", "name": "Sırt Ağrısı (Omurga)"}]
+        },
+        "Borreliosis (Lyme)": {
+            "source": "RAH (Syf 85) + Ulrich (4.01)",
+            "desc": "Kene kaynaklı enfeksiyon.",
+            "direct": ["24.10"],
+            "compact": ["00.00", "01.00", "02.00", "24.00", "24.10", "31.10", "35.10", "72.00", "54.00", "53.52", "31.50", "01.00"],
+            "ulrich": [{"code": "4.01", "name": "Alerji / Enfeksiyon"}]
         },
         "Bronşit (Akut)": {
             "source": "RAH (Syf 132)",
@@ -161,10 +184,11 @@ def get_rah_database():
             "ulrich": [{"code": "4.05", "name": "Mantar Programı"}]
         },
         "Cilt Sorunları (Akne/Egzama)": {
-            "source": "RAH (Syf 181)",
+            "source": "RAH (Syf 181) + Ulrich (4.06)",
             "desc": "Genel cilt problemleri.",
             "direct": ["63.10"],
-            "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "63.10", "63.20", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "63.10", "63.20", "31.50", "01.00"],
+            "ulrich": [{"code": "4.06", "name": "Cilt / Saç / Tırnak"}]
         },
         "Covid-19 / Long-Covid": {
             "source": "RAH (Syf 137)",
@@ -177,6 +201,13 @@ def get_rah_database():
             "desc": "İnflamatuar bağırsak hastalığı.",
             "direct": ["47.50"],
             "compact": ["00.00", "01.00", "02.00", "31.12", "31.16", "31.70", "35.10", "70.19", "46.00", "47.50", "64.55", "72.00", "31.50", "01.00"]
+        },
+        "Çakra Dengeleme": {
+            "source": "Ulrich (4.13)",
+            "desc": "Enerji merkezleri.",
+            "direct": ["01.40"],
+            "compact": ["00.00", "01.00", "01.40", "01.41", "01.42", "01.43", "01.44", "01.45", "01.46", "01.47", "31.50", "01.00"],
+            "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri / Çakra"}]
         },
 
         # --- D ---
@@ -194,6 +225,13 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "48.10", "64.10", "64.28", "64.29", "72.10", "75.10", "31.50", "01.00"],
             "ulrich": [{"code": "4.16", "name": "Kundalini (Enerji) Stresi"}]
         },
+        "Diş Eti İltihabı (Periodontitis)": {
+            "source": "RAH (Syf 144) + Ulrich (4.11)",
+            "desc": "Diş eti ve çene sorunları.",
+            "direct": ["46.20"],
+            "compact": ["00.00", "01.00", "02.00", "31.39", "46.00", "46.10", "46.20", "35.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.11", "name": "Diş / Çene Programı"}]
+        },
         "Diyabet (Şeker Hastalığı)": {
             "source": "RAH (Syf 154) + Ulrich (4.19)",
             "desc": "Metabolizma ve pankreas desteği.",
@@ -210,19 +248,33 @@ def get_rah_database():
         },
 
         # --- E ---
+        "Elektrosmog / Radyasyon": {
+            "source": "Ulrich (4.03) + RAH (Syf 80)",
+            "desc": "Elektromanyetik alan yüklemesi.",
+            "direct": ["22.00"],
+            "compact": ["00.00", "01.00", "02.00", "22.00", "22.10", "22.90", "31.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon"}]
+        },
         "Endometriozis": {
             "source": "RAH (Syf 199)",
             "desc": "Rahim içi doku büyümesi.",
             "direct": ["67.30"],
             "compact": ["00.00", "01.00", "02.00", "31.20", "31.22", "31.81", "35.10", "70.22", "36.10", "64.80", "65.10", "65.30", "65.31", "65.50", "66.00", "67.30", "72.00", "75.00", "31.50", "01.00"]
         },
+        "Epstein Barr Virüsü (EBV)": {
+            "source": "RAH (Syf 95)",
+            "desc": "Kronik yorgunluk ve viral yük.",
+            "direct": ["16.20"],
+            "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "16.00", "16.20", "48.10", "36.00", "31.50", "01.00"]
+        },
 
         # --- F ---
         "Fibromiyalji": {
-            "source": "RAH (Syf 166)",
+            "source": "RAH (Syf 166) + Ulrich (4.13)",
             "desc": "Yaygın kas ağrıları.",
             "direct": ["53.84"],
-            "compact": ["00.00", "01.00", "02.00", "31.38", "31.40", "35.10", "70.26", "70.27", "36.00", "52.00", "53.23", "53.25", "53.28", "53.62", "53.84", "62.10", "64.00", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.38", "31.40", "35.10", "70.26", "70.27", "36.00", "52.00", "53.23", "53.25", "53.28", "53.62", "53.84", "62.10", "64.00", "31.50", "01.00"],
+            "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri"}]
         },
         "Fruktoz İntoleransı": {
             "source": "RAH (Syf 121)",
@@ -233,10 +285,11 @@ def get_rah_database():
 
         # --- G ---
         "Gastrit / Mide Yanması": {
-            "source": "RAH (Syf 143)",
+            "source": "RAH (Syf 143) + Ulrich (4.07)",
             "desc": "Mide mukozası iltihabı ve reflü.",
             "direct": ["47.20", "47.10"],
-            "compact": ["00.00", "01.00", "02.00", "31.13", "35.10", "70.19", "46.30", "47.20", "47.10", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.13", "35.10", "70.19", "46.30", "47.20", "47.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.07", "name": "Asidoz / Mide"}]
         },
         "Glokom (Göz Tansiyonu)": {
             "source": "RAH (Syf 176)",
@@ -252,13 +305,21 @@ def get_rah_database():
             "ulrich": [{"code": "4.01", "name": "Alerji/Enfeksiyon (Temel)"}]
         },
         "Gut Hastalığı": {
-            "source": "RAH (Syf 154)",
+            "source": "RAH (Syf 154) + Ulrich (4.07)",
             "desc": "Ürik asit birikimi.",
             "direct": ["51.50"],
-            "compact": ["00.00", "01.00", "02.00", "30.70", "31.10", "35.10", "50.00", "51.10", "51.50", "52.60", "71.11", "71.50", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "30.70", "31.10", "35.10", "50.00", "51.10", "51.50", "52.60", "71.11", "71.50", "31.50", "01.00"],
+            "ulrich": [{"code": "4.07", "name": "Asidoz"}]
         },
 
         # --- H ---
+        "Herpes (Uçuk)": {
+            "source": "RAH (Syf 96) + Ulrich (4.01)",
+            "desc": "Herpes Simplex enfeksiyonu.",
+            "direct": ["16.50"],
+            "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "16.50", "16.51", "63.55", "31.50", "01.00"],
+            "ulrich": [{"code": "4.01", "name": "Enfeksiyon"}]
+        },
         "Hormonal Denge (Kadın)": {
             "source": "RAH (Syf 186) + Ulrich (4.08)",
             "desc": "Genel hormon düzenleme.",
@@ -282,10 +343,11 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.00", "31.12", "31.16", "35.10", "70.19", "46.00", "47.86", "31.50", "01.00"]
         },
         "Karaciğer Detoks": {
-            "source": "RAH (Syf 149)",
+            "source": "RAH (Syf 149) + Ulrich (4.14)",
             "desc": "Karaciğer temizliği ve desteği.",
             "direct": ["48.10", "31.60"],
-            "compact": ["00.00", "01.00", "02.00", "31.29", "35.10", "70.20", "48.10", "49.10", "31.60", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.29", "35.10", "70.20", "48.10", "49.10", "31.60", "31.50", "01.00"],
+            "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}]
         },
         "Katarakt": {
             "source": "RAH (Syf 176)",
@@ -293,11 +355,18 @@ def get_rah_database():
             "direct": ["57.20"],
             "compact": ["00.00", "01.00", "02.00", "31.31", "35.10", "70.12", "56.00", "56.40", "57.20", "31.50", "01.00"]
         },
+        "Kemik Kırığı": {
+            "source": "RAH (Syf 155)",
+            "desc": "Kırık iyileşmesi.",
+            "direct": ["53.11"],
+            "compact": ["00.00", "01.00", "02.00", "31.39", "31.41", "35.10", "70.51", "52.00", "53.11", "31.50", "01.00"]
+        },
         "Kilo Verme": {
-            "source": "RAH (Syf 152)",
+            "source": "RAH (Syf 152) + Ulrich (4.19)",
             "desc": "Metabolizma hızlandırma.",
             "direct": ["75.15"],
-            "compact": ["00.00", "01.00", "02.00", "09.00", "31.10", "36.00", "38.00", "44.00", "46.40", "48.10", "50.00", "64.00", "75.10", "75.15", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "09.00", "31.10", "36.00", "38.00", "44.00", "46.40", "48.10", "50.00", "64.00", "75.10", "75.15", "31.50", "01.00"],
+            "ulrich": [{"code": "4.19", "name": "Diyabet / Metabolizma"}]
         },
 
         # --- M ---
@@ -334,10 +403,11 @@ def get_rah_database():
 
         # --- P ---
         "Parkinson": {
-            "source": "RAH (Syf 170)",
+            "source": "RAH (Syf 170) + Ulrich (4.17)",
             "desc": "Titreme ve hareket bozukluğu.",
             "direct": ["55.31"],
-            "compact": ["00.00", "01.00", "02.00", "31.34", "31.35", "35.10", "70.68", "38.10", "54.00", "55.31", "64.28", "72.00", "75.10", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.34", "31.35", "35.10", "70.68", "38.10", "54.00", "55.31", "64.28", "72.00", "75.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.17", "name": "Parkinson Programı"}]
         },
         "Prostat Sorunları": {
             "source": "RAH (Syf 200) + Ulrich (4.09)",
@@ -356,24 +426,27 @@ def get_rah_database():
             "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon Koruma"}]
         },
         "Romatizma / Artrit": {
-            "source": "RAH (Syf 160)",
+            "source": "RAH (Syf 160) + Ulrich (4.13)",
             "desc": "Eklem iltihabı ve ağrıları.",
             "direct": ["53.52"],
-            "compact": ["00.00", "01.00", "02.00", "31.40", "31.41", "35.10", "70.28", "52.00", "53.52", "53.53", "53.54", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.40", "31.41", "35.10", "70.28", "52.00", "53.52", "53.53", "53.54", "31.50", "01.00"],
+            "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri"}]
         },
 
         # --- S ---
         "Sedef (Psoriasis)": {
-            "source": "RAH (Syf 181)",
+            "source": "RAH (Syf 181) + Ulrich (4.06)",
             "desc": "Cilt pullanması.",
             "direct": ["63.10"],
-            "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "62.20", "62.60", "63.10", "72.00", "75.00", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "62.20", "62.60", "63.10", "72.00", "75.00", "31.50", "01.00"],
+            "ulrich": [{"code": "4.06", "name": "Cilt / Saç"}]
         },
         "Sırt Ağrısı": {
-            "source": "RAH (Syf 163)",
+            "source": "RAH (Syf 163) + Ulrich (4.21)",
             "desc": "Omurga kaynaklı ağrılar.",
             "direct": ["53.70"],
-            "compact": ["00.00", "01.00", "02.00", "31.40", "35.10", "71.11", "71.50", "52.00", "52.20", "53.23", "53.25", "53.41", "53.70", "72.05", "75.10", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.40", "35.10", "71.11", "71.50", "52.00", "52.20", "53.23", "53.25", "53.41", "53.70", "72.05", "75.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.21", "name": "Sırt Ağrısı / Omurga"}]
         },
         "Stres / Tükenmişlik": {
             "source": "RAH (Syf 207) + Ulrich (4.02)",
@@ -392,10 +465,11 @@ def get_rah_database():
             "ulrich": [{"code": "4.12", "name": "Tinnitus Programı"}]
         },
         "Tiroid (Dengesizlik)": {
-            "source": "RAH (Syf 188-189)",
+            "source": "RAH (Syf 188-189) + Ulrich (4.08)",
             "desc": "Hipotiroidi veya Hipertiroidi.",
             "direct": ["65.33", "65.34"],
-            "compact": ["00.00", "01.00", "02.00", "31.33", "35.10", "70.54", "64.10", "64.20", "64.30", "65.30", "31.50", "01.00"]
+            "compact": ["00.00", "01.00", "02.00", "31.33", "35.10", "70.54", "64.10", "64.20", "64.30", "65.30", "31.50", "01.00"],
+            "ulrich": [{"code": "4.08", "name": "Hormon Programı"}]
         },
 
         # --- U ---
@@ -408,6 +482,13 @@ def get_rah_database():
         },
 
         # --- Y ---
+        "Yara İzi (Skar) Tedavisi": {
+            "source": "Ulrich (4.22) + RAH",
+            "desc": "Yara izi dokusunun (skar) temizlenmesi.",
+            "direct": ["31.81"],
+            "compact": ["00.00", "01.00", "02.00", "31.10", "31.81", "31.80", "70.24", "31.50", "01.00"],
+            "ulrich": [{"code": "4.22", "name": "Skar / Yara İzi"}]
+        },
         "Yüksek Tansiyon": {
             "source": "RAH (Syf 127) + Ulrich (4.18)",
             "desc": "Hipertansiyon.",
@@ -422,7 +503,7 @@ def get_program_name(code):
     names = {
         "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "01.10": "Enerji Yükleme", "01.30": "Ön Kontrol", "01.40": "Çakralar Komple",
         "02.00": "Akupunktur Meridyenleri", "07.21": "Demir Metabolizması",
-        "22.00": "Elektrosmog", "22.90": "Radyasyon Yükü",
+        "22.00": "Elektrosmog", "22.90": "Radyasyon Yükü", "24.10": "Borreliosis",
         "31.10": "ATP Üretimi", "31.50": "Temel Detoks", "31.60": "Detoks Karaciğer",
         "35.10": "Bağışıklık Artırma", "35.20": "Alerji Temel",
         "70.45": "Migren Patojen", "70.47": "Tansiyon Düşürme"
