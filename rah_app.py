@@ -6,11 +6,31 @@ import os
 # =============================================================================
 # 1. GÖRSEL TASARIM (PREMIUM CSS - Dr. Sait Sevinç Özel Tema)
 # =============================================================================
+# =============================================================================
+# 1. GÖRSEL TASARIM (PREMIUM CSS - Dr. Sait Sevinç Light Theme)
+# =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     
+    /* --- ZORUNLU AYDINLIK MOD (FORCE LIGHT THEME) --- */
+    [data-testid="stAppViewContainer"] {
+        background-color: #ffffff;
+        color: #333333;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #f8f9fa;
+        border-right: 1px solid #e0e0e0;
+    }
+    [data-testid="stHeader"] {
+        background-color: rgba(0,0,0,0);
+    }
+    [data-testid="stToolbar"] {
+        right: 2rem;
+    }
+    
+    /* Genel Font Ayarları */
     html, body, [class*="css"]  {
         font-family: 'Inter', sans-serif;
         color: #333;
@@ -31,11 +51,13 @@ def local_css():
         font-weight: 800;
         margin-bottom: 5px;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        color: white !important;
     }
     .header-subtitle {
         font-size: 1rem;
         font-weight: 400;
         opacity: 0.9;
+        color: #ecf0f1 !important;
     }
 
     /* --- KARTLAR --- */
@@ -48,13 +70,16 @@ def local_css():
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         margin-bottom: 20px;
     }
+    .disease-card h2 { color: #2c3e50 !important; }
+    .disease-card p { color: #555 !important; }
     
     .ulrich-card {
-        background: #fdfcf0; /* Hafif sarımsı, eski kağıt havası */
+        background: #fdfcf0; 
         border: 2px solid #f1c40f;
         padding: 15px;
         border-radius: 10px;
         margin-top: 10px;
+        color: #333;
     }
 
     /* --- TIMELINE ADIMLARI --- */
@@ -89,11 +114,13 @@ def local_css():
     /* --- SEKME TASARIMI --- */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
+        background-color: transparent;
     }
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         white-space: pre-wrap;
-        background-color: #f8f9fa;
+        background-color: #f1f2f6;
+        color: #333;
         border-radius: 5px 5px 0 0;
         gap: 1px;
         padding-top: 10px;
@@ -102,12 +129,10 @@ def local_css():
     .stTabs [aria-selected="true"] {
         background-color: #fff;
         border-top: 3px solid #e67e22;
+        color: #e67e22;
     }
 
     /* Sidebar ve Footer */
-    section[data-testid="stSidebar"] {
-        background-color: #f4f6f7;
-    }
     .footer {
         margin-top: 50px;
         text-align: center;
@@ -131,7 +156,6 @@ def local_css():
     footer {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
-
 # =============================================================================
 # 2. VERİTABANI (RAH + ULRICH ENTEGRASYONU)
 # =============================================================================
@@ -432,4 +456,5 @@ def main():
         st.markdown('<div class="footer">Developed for Dr. Sait Sevinç © 2025</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
+
     main()
