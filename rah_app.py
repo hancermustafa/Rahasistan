@@ -1,88 +1,86 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
 import os
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (PREMIUM CSS - Dr. Sait Sevinç Özel Tema)
-# =============================================================================
-# =============================================================================
-# 1. GÖRSEL TASARIM (PREMIUM CSS - Dr. Sait Sevinç Light Theme)
+# 1. GÖRSEL TASARIM (RESTORASYON VE DÜZELTME)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     
-    /* --- ZORUNLU AYDINLIK MOD (FORCE LIGHT THEME) --- */
+    /* --- GENEL AYARLAR (ZORUNLU AYDINLIK MOD) --- */
     [data-testid="stAppViewContainer"] {
-        background-color: #ffffff;
-        color: #333333;
+        background-color: #ffffff !important;
+        color: #333333 !important;
     }
+    
+    /* --- SIDEBAR (SOL MENÜ) DÜZELTMESİ --- */
     [data-testid="stSidebar"] {
-        background-color: #f8f9fa;
+        background-color: #f8f9fa !important;
         border-right: 1px solid #e0e0e0;
     }
-    [data-testid="stHeader"] {
-        background-color: rgba(0,0,0,0);
-    }
-    [data-testid="stToolbar"] {
-        right: 2rem;
+    
+    /* Sidebar içindeki yazıları zorla koyu renk yap (Görünmezliği engeller) */
+    [data-testid="stSidebar"] * {
+        color: #2c3e50 !important;
     }
     
-    /* Genel Font Ayarları */
-    html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
-        color: #333;
-    }
-    
-    /* --- HEADER --- */
-    .header-container {
-        background: linear-gradient(135deg, #2980b9 0%, #2c3e50 100%);
-        padding: 2rem;
-        border-radius: 15px;
-        color: white;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        margin-bottom: 25px;
-        border-bottom: 5px solid #e67e22;
-    }
-    .header-title {
-        font-size: 2rem;
-        font-weight: 800;
-        margin-bottom: 5px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        color: white !important;
-    }
-    .header-subtitle {
-        font-size: 1rem;
-        font-weight: 400;
-        opacity: 0.9;
-        color: #ecf0f1 !important;
+    /* Sidebar'daki Radio Button seçim rengi */
+    [data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"] {
+        background-color: transparent !important;
     }
 
-    /* --- KARTLAR --- */
+    /* --- HEADER TASARIMI --- */
+    .header-container {
+        background: linear-gradient(135deg, #2980b9 0%, #2c3e50 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        color: white !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        border-bottom: 4px solid #e67e22;
+    }
+    .header-title {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: white !important;
+        margin: 0;
+    }
+    .header-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: #ecf0f1 !important;
+        opacity: 0.9;
+    }
+
+    /* --- HASTALIK KARTI --- */
     .disease-card {
         background: white;
         border: 1px solid #eee;
-        border-left: 6px solid #e67e22;
+        border-left: 5px solid #e67e22;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         margin-bottom: 20px;
     }
-    .disease-card h2 { color: #2c3e50 !important; }
+    .disease-card h2 { color: #2c3e50 !important; margin-top:0; }
     .disease-card p { color: #555 !important; }
     
+    /* --- ULRICH KARTI --- */
     .ulrich-card {
-        background: #fdfcf0; 
-        border: 2px solid #f1c40f;
+        background: #fff9db;
+        border: 1px solid #f1c40f;
         padding: 15px;
-        border-radius: 10px;
-        margin-top: 10px;
-        color: #333;
+        border-radius: 8px;
+        color: #333 !important;
+        margin-bottom: 15px;
     }
 
-    /* --- TIMELINE ADIMLARI --- */
+    /* --- TIMELINE (ADIMLAR) --- */
     .step-row {
         display: flex;
         flex-wrap: wrap;
@@ -90,83 +88,57 @@ def local_css():
         background: white;
         border: 1px solid #f0f0f0;
         margin-bottom: 8px;
-        padding: 12px;
+        padding: 10px 15px;
         border-radius: 8px;
         transition: transform 0.2s;
     }
     .step-row:hover {
         border-color: #3498db;
-        transform: translateX(5px);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transform: translateX(3px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     .code-pill {
         background: #2c3e50;
-        color: #fff;
-        font-family: 'Courier New', monospace;
+        color: #fff !important;
+        font-family: monospace;
         font-weight: bold;
-        padding: 5px 12px;
+        padding: 4px 10px;
         border-radius: 5px;
-        min-width: 80px;
+        min-width: 70px;
         text-align: center;
-        margin-right: 15px;
+        margin-right: 12px;
     }
     
-    /* --- SEKME TASARIMI --- */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        background-color: transparent;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        white-space: pre-wrap;
-        background-color: #f1f2f6;
-        color: #333;
-        border-radius: 5px 5px 0 0;
-        gap: 1px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #fff;
-        border-top: 3px solid #e67e22;
-        color: #e67e22;
-    }
-
-    /* Sidebar ve Footer */
-    .footer {
-        margin-top: 50px;
-        text-align: center;
-        color: #95a5a6;
-        font-size: 0.8rem;
-        border-top: 1px solid #eee;
-        padding-top: 20px;
-    }
-    
-    /* Etiketler */
-    .tag { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; color: white; margin-left: auto; }
+    /* --- ETİKETLER --- */
+    .tag { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white !important; margin-left: auto; }
     .bg-blue { background-color: #3498db; }
     .bg-green { background-color: #27ae60; }
     .bg-purple { background-color: #8e44ad; }
     .bg-red { background-color: #e74c3c; }
-    .bg-gold { background-color: #f39c12; color: #fff; }
+    .bg-gold { background-color: #f39c12; }
 
-    /* Deploy Butonu Gizle */
+    /* --- DEPLOY BUTONU GİZLEME --- */
     .stDeployButton {display:none;}
     header {visibility: hidden;}
     footer {visibility: hidden;}
+    
+    /* Özel Footer */
+    .custom-footer {
+        margin-top: 40px;
+        text-align: center;
+        color: #999 !important;
+        font-size: 0.8rem;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
     </style>
     """, unsafe_allow_html=True)
+
 # =============================================================================
-# 2. VERİTABANI (RAH + ULRICH ENTEGRASYONU)
+# 2. VERİTABANI (RAH + ULRICH ENTEGRASYONU - TAM LİSTE)
 # =============================================================================
 def get_rah_database():
-    # db yapısı:
-    # 'source': Kaynak bilgisi
-    # 'desc': Açıklama
-    # 'direct': Doğrudan RAH kodları
-    # 'compact': Kompakt RAH Protokolü (Sıralı)
-    # 'ulrich': Dr. Elmar Ulrich Modülü Kodları (YENİ!)
-
+    # Source 2: Syf 104-207 + Ulrich Modülü
     db = {
         # --- BAĞIŞIKLIK & ENFEKSİYON ---
         "Alerji (Genel)": {
@@ -189,6 +161,13 @@ def get_rah_database():
             "direct": ["35.10"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "34.00", "35.10", "35.11", "36.50", "31.50", "01.00"],
             "ulrich": [{"code": "90.56", "name": "Bağışıklık Sistemi (Savunma)"}]
+        },
+        "Covid-19 / Long-Covid": {
+            "source": "Source 2, Syf. 137",
+            "desc": "Koronavirüs sonrası destek.",
+            "direct": ["43.52"],
+            "compact": ["00.00", "01.00", "02.00", "31.11", "35.10", "22.93", "70.17", "42.70", "43.10", "43.30", "43.50", "43.52", "31.50", "01.00"],
+            "ulrich": [{"code": "90.48", "name": "Enfeksiyon Desteği"}]
         },
 
         # --- SİNİR SİSTEMİ & PSİKOLOJİ ---
@@ -220,6 +199,13 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.21", "31.10", "35.10", "70.10", "54.00", "55.10", "64.11", "65.30", "72.00", "75.10", "31.50", "01.00"],
             "ulrich": [{"code": "90.59", "name": "Stres / Gevşeme (Uyku Öncesi)"}]
         },
+        "Parkinson Hastalığı": {
+            "source": "Source 2, Syf. 170", 
+            "desc": "Dopamin dengesi ve motor kontrol sistemi.", 
+            "direct": ["55.31", "64.28"], 
+            "compact": ["00.00", "01.00", "02.00", "31.34", "31.35", "35.10", "70.68", "38.10", "54.00", "55.31", "64.28", "72.00", "75.10", "31.50", "01.00"],
+            "ulrich": [{"code": "90.53", "name": "Sinir Sistemi Dejenerasyonu"}]
+        },
 
         # --- KAS & İSKELET SİSTEMİ ---
         "Romatizma / Artrit": {
@@ -243,13 +229,20 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.00", "31.39", "31.40", "35.10", "53.21", "53.22", "53.24", "31.50", "01.00"],
             "ulrich": [{"code": "90.66", "name": "Spor Yaralanmaları / Travma"}]
         },
+        "Osteoporoz": {
+            "source": "Source 2, Syf. 165", 
+            "desc": "Kemik erimesi.", 
+            "direct": ["53.80"], 
+            "compact": ["00.00", "01.00", "02.00", "31.41", "35.10", "50.00", "52.00", "52.05", "53.80", "64.00", "64.81", "31.50", "01.00"],
+            "ulrich": [{"code": "90.63", "name": "Kemik Metabolizması"}]
+        },
 
         # --- KALP & DOLAŞIM ---
         "Yüksek Tansiyon": {
             "source": "Source 2 (Syf 127) & Ulrich M4",
             "desc": "Kan basıncı regülasyonu.",
             "direct": ["39.60", "70.47"],
-            "compact": ["00.00", "01.00", "02.00", "31.39", "35.10", "70.47", "38.00", "39.10", "39.50", "39.60", "64.00", "31.50", "01.00"],
+            "compact": ["00.00", "01.00", "02.00", "31.39", "35.10", "70.47", "38.00", "39.10", "39.40", "39.50", "39.60", "64.00", "31.50", "01.00"],
             "ulrich": [{"code": "90.22", "name": "Hipertansiyon (Yüksek Tansiyon)"}]
         },
         "Dolaşım Bozukluğu": {
@@ -258,6 +251,13 @@ def get_rah_database():
             "direct": ["39.10"],
             "compact": ["00.00", "01.00", "02.00", "31.39", "35.10", "38.00", "38.10", "39.10", "31.50", "01.00"],
             "ulrich": [{"code": "90.20", "name": "Dolaşım / Kalp"}]
+        },
+        "Varis": {
+            "source": "Source 2, Syf. 126", 
+            "desc": "Toplardamar genişlemesi.", 
+            "direct": ["39.20"], 
+            "compact": ["00.00", "01.00", "02.00", "31.39", "31.87", "35.10", "36.00", "38.00", "38.50", "39.20", "39.40", "31.50", "01.00"],
+            "ulrich": [{"code": "90.24", "name": "Venöz Dolaşım / Varis"}]
         },
 
         # --- SİNDİRİM SİSTEMİ ---
@@ -275,6 +275,20 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.00", "31.29", "35.10", "70.20", "48.10", "49.10", "31.60", "31.50", "01.00"],
             "ulrich": [{"code": "90.32", "name": "Karaciğer / Safra / Detoks"}]
         },
+        "Kabızlık": {
+            "source": "Source 2, Syf. 148", 
+            "desc": "Obstipasyon.", 
+            "direct": ["47.86"], 
+            "compact": ["00.00", "01.00", "02.00", "31.12", "31.16", "35.10", "70.19", "46.00", "47.86", "31.50", "01.00"],
+            "ulrich": [{"code": "90.30", "name": "Mide / Bağırsak"}]
+        },
+        "Diyabet (Şeker Hastalığı)": {
+            "source": "Source 2, Syf. 154", 
+            "desc": "Tip 1 ve Tip 2 Diyabet desteği.", 
+            "direct": ["51.40"], 
+            "compact": ["00.00", "01.00", "02.00", "31.14", "35.10", "70.20", "48.35", "50.20", "51.20", "51.40", "64.70", "31.50", "01.00"],
+            "ulrich": [{"code": "90.54", "name": "Metabolizma / Diyabet"}]
+        },
         
         # --- DİĞER ÖZEL DURUMLAR ---
         "Cilt Sorunları (Akne/Egzama)": {
@@ -290,19 +304,35 @@ def get_rah_database():
             "direct": ["65.10", "65.60"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.22", "64.00", "65.10", "65.60", "31.50", "01.00"],
             "ulrich": [{"code": "90.42", "name": "Hormonal Düzenleme (Kadın)"}]
+        },
+        "Prostat Sorunları": {
+            "source": "Source 2, Syf. 200 & Ulrich M4",
+            "desc": "Prostatit ve iyi huylu büyüme.",
+            "direct": ["69.30", "69.10"],
+            "compact": ["00.00", "01.00", "02.00", "31.18", "35.10", "70.23", "68.26", "69.10", "69.30", "31.50", "01.00"],
+            "ulrich": [{"code": "90.43", "name": "Hormonal Düzenleme (Erkek)"}]
         }
     }
     return db
 
 def get_program_name(code):
-    # Standart RAH isimleri
+    # Temel programların isimleri
     names = {
-        "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "02.00": "Akupunktur Meridyenleri",
-        "31.10": "ATP Üretimi Komple", "31.50": "Temel Detoksifikasyon", "35.10": "Bağışıklık Artırma",
-        "70.xx": "Sistem Tedavisi"
+        "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "01.10": "Enerji Yükleme", "01.30": "Ön Kontrol (Pre-control)", "01.40": "Çakralar Komple",
+        "02.00": "Akupunktur Meridyenleri",
+        "31.10": "ATP Üretimi Komple", "31.50": "Temel Detoksifikasyon", "31.51": "Detoks Kan Sistemi", "31.52": "Detoks Lenfatik Sistem", "31.60": "Detoks Karaciğer", "31.81": "Yara İzi Tedavisi",
+        "35.10": "Bağışıklık Artırma",
+        "34.00": "Bağışıklık Sis. Fizyolojisi", "36.00": "Lenfatik Sistem Fizyolojisi", "38.00": "Dolaşım Sistemi Fizyolojisi", "40.00": "Kalp Fizyolojisi", "42.00": "Solunum Sis. Fizyolojisi", "44.00": "Böbrek Fizyolojisi", "46.00": "Sindirim Sis. Fizyolojisi", "48.00": "Karaciğer/Safra/Pankreas Fizyolojisi", "50.00": "Metabolizma Fizyolojisi", "52.00": "Kas-İskelet Sis. Fizyolojisi", "54.00": "Sinir Sistemi Fizyolojisi", "56.00": "Göz Fizyolojisi", "58.00": "İşitme Organı Fizyolojisi", "62.00": "Cilt/Saç Fizyolojisi", "64.00": "Hormonal Sistem Fizyolojisi", "66.00": "Kadın Cinsel Org. Fizyolojisi", "68.00": "Erkek Cinsel Org. Fizyolojisi"
     }
-    if code in names: return names[code]
-    if code.startswith("70."): return "Sistem Programı (Kombine)"
+    
+    if code in names:
+        return names[code]
+    
+    # Sistem programları
+    if code.startswith("70."):
+        return "Sistem Tedavisi (Kombine)"
+    
+    # Diğerleri için genel isim
     return f"RAH Programı {code}"
 
 def get_duration(code):
@@ -311,10 +341,11 @@ def get_duration(code):
     return "5 dk"
 
 def get_category_class(code):
-    if code.startswith("01.") or code.startswith("02."): return "bg-blue"
-    if code.startswith("31.5") or code.startswith("31.6"): return "bg-green"
-    if code.startswith("70."): return "bg-purple"
-    return "bg-red"
+    # CSS sınıfı döndürür
+    if code.startswith("01.") or code.startswith("02."): return "bg-blue" 
+    if code.startswith("31.5") or code.startswith("31.6"): return "bg-green" 
+    if code.startswith("70."): return "bg-purple" 
+    return "bg-red" 
 
 def get_category_name(code):
     if code.startswith("01.") or code.startswith("02."): return "Enerji"
@@ -323,8 +354,9 @@ def get_category_name(code):
     return "Tedavi"
 
 # =============================================================================
-# 3. ANA UYGULAMA
+# 3. ANA UYGULAMA (STREAMLIT)
 # =============================================================================
+
 def main():
     st.set_page_config(page_title="RAH Asistanı | Dr. Sait Sevinç", page_icon="🧬", layout="wide")
     local_css()
@@ -341,7 +373,7 @@ def main():
             st.markdown("### Dr. Sait Sevinç")
 
         st.markdown("### Profesyonel Biyorezonans Asistanı")
-        st.caption("v5.0 - Ulrich Modülü Entegre")
+        st.caption("v6.0 - Restore Edition")
         st.markdown("---")
         
         st.subheader("⚙️ Cihaz Ayarı")
@@ -369,10 +401,8 @@ def main():
     
     # Arama
     st.markdown('<div class="search-wrapper">', unsafe_allow_html=True)
-    st.markdown('<div class="search-label"><span>🔎</span> Rahatsızlık veya Semptom Seçimi</div>', unsafe_allow_html=True)
     disease_list = sorted(db.keys())
-    selected_disease = st.selectbox("Listeden seçim yapınız:", [""] + disease_list, label_visibility="collapsed")
-    st.markdown('</div>', unsafe_allow_html=True)
+    selected_disease = st.selectbox("Lütfen bir rahatsızlık arayın veya seçin:", [""] + disease_list)
 
     if selected_disease:
         data = db[selected_disease]
@@ -430,11 +460,11 @@ def main():
         # --- TAB 3: ULRICH PROTOKOLÜ (YENİ!) ---
         with tab3:
             if "ulrich" in data:
-                st.markdown(f"##### 🧬 Dr. Elmar Ulrich Özel Modülü")
+                st.markdown(f"##### 🧬 Dr. Elmar Ulrich Özel Modülü (M4)")
                 st.markdown("""
                 <div class="ulrich-card">
-                    <b>ℹ️ Bilgi:</b> Dr. Ulrich protokolleri, belirli hastalık grupları için optimize edilmiş özel sistem programlarıdır.
-                    Genellikle 90.00 serisi (M4 Modülü) içinde yer alırlar.
+                    <b>ℹ️ Bilgi:</b> Dr. Ulrich protokolleri, belirli hastalık grupları için optimize edilmiş 
+                    özel sistem programlarıdır (90.00 Serisi). Genellikle <b>10-20 dakika</b> uygulanır.
                 </div>
                 <br>
                 """, unsafe_allow_html=True)
@@ -453,8 +483,7 @@ def main():
                 st.info("Bu rahatsızlık için tanımlanmış özel bir Ulrich Protokolü (M4) bulunamadı.")
 
     else:
-        st.markdown('<div class="footer">Developed for Dr. Sait Sevinç © 2025</div>', unsafe_allow_html=True)
+        st.markdown('<div class="custom-footer">Developed for Dr. Sait Sevinç © 2025</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
-
     main()
