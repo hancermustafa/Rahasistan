@@ -3,47 +3,87 @@ import pandas as pd
 import os
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (ULTIMATE CSS - MOBİL & DARK MODE FIX)
+# 1. GÖRSEL TASARIM (MOBİL ODAKLI ULTIMATE CSS)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
-    /* --- ZORUNLU AYDINLIK MOD (FORCE LIGHT) --- */
+    /* --- 1. ZORUNLU AYDINLIK MOD (FORCE LIGHT) --- */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
         font-family: 'Inter', sans-serif;
         color: #333333 !important;
     }
     
-    /* Tüm yazıları koyu renk yap */
+    /* Tüm genel yazıları koyu renk yap */
     h1, h2, h3, h4, h5, h6, p, div, span, label, li, button {
         color: #2c3e50; 
     }
 
-    /* --- MOBİL UYUMLULUK AYARLARI --- */
-    @media only screen and (max-width: 768px) {
-        .header-container { padding: 1.5rem !important; }
-        .header-container h1 { font-size: 1.5rem !important; }
-        /* Mobilde menü aşağı taşmasın, kaydırılabilsin */
-        ul[data-baseweb="menu"] {
-            max-height: 250px !important;
-            overflow-y: auto !important;
-        }
-        /* Telefondaki klavye açılınca alan kalsın */
-        div[data-baseweb="select"] { margin-bottom: 20px !important; }
+    /* --- 2. HEADER AYARLARI (MOBİLDE KOMPAKT) --- */
+    .header-container {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        padding: 1.2rem;
+        border-radius: 12px;
+        color: white !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        margin-bottom: 15px;
+        border-bottom: 4px solid #e67e22;
+        text-align: center;
+    }
+    .header-title {
+        font-size: 1.8rem; /* Masaüstü boyutu */
+        font-weight: 800;
+        margin: 0;
+        color: white !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        line-height: 1.2;
+    }
+    .header-subtitle {
+        font-size: 0.85rem;
+        color: #ecf0f1 !important;
+        margin-top: 5px;
+        opacity: 0.9;
+        font-weight: 400;
     }
 
-    /* --- INPUT VE MENÜ (KARA KUTU SORUNU ÇÖZÜMÜ) --- */
+    /* MOBİL ÖZEL AYARLARI (Küçük Ekranlar İçin) */
+    @media only screen and (max-width: 600px) {
+        .header-container {
+            padding: 1rem !important;
+            margin-bottom: 10px !important;
+        }
+        .header-title {
+            font-size: 1.4rem !important; /* Mobilde font küçülsün */
+        }
+        .header-subtitle {
+            font-size: 0.75rem !important;
+            display: block; /* Mobilde alt satıra geçsin */
+        }
+        /* Menü aşağı taşmasın, kaydırılabilsin */
+        ul[data-baseweb="menu"] {
+            max-height: 300px !important;
+            overflow-y: auto !important;
+        }
+        /* Kartların iç boşluğunu azalt */
+        .disease-card {
+            padding: 15px !important;
+        }
+    }
+
+    /* --- 3. GİRİŞ KUTULARI VE MENÜLER --- */
     div[data-baseweb="select"] > div {
         background-color: #ffffff !important;
         border: 2px solid #dce1e6 !important;
         color: #333 !important;
         border-radius: 8px;
+        min-height: 45px; /* Mobilde parmakla basmak kolay olsun */
     }
     div[data-baseweb="select"] span {
         color: #333 !important;
+        font-weight: 500;
     }
     ul[data-baseweb="menu"] {
         background-color: #ffffff !important;
@@ -53,6 +93,7 @@ def local_css():
         color: #333 !important;
         background-color: #ffffff !important;
         border-bottom: 1px solid #f9f9f9;
+        padding: 12px 15px !important; /* Mobilde liste aralığı geniş olsun */
     }
     li[role="option"]:hover, li[aria-selected="true"] {
         background-color: #fff3e0 !important;
@@ -60,51 +101,40 @@ def local_css():
         font-weight: bold;
     }
     
-    /* --- SEKMELER (TABS) --- */
+    /* --- 4. SEKMELER (TABS) --- */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 5px;
-        flex-wrap: wrap;
+        gap: 4px;
+        flex-wrap: wrap; 
     }
     .stTabs [data-baseweb="tab"] {
         height: auto;
-        min-height: 45px;
+        min-height: 40px;
         background-color: #f1f2f6 !important;
         color: #57606f !important;
         border-radius: 6px 6px 0 0;
         font-weight: 600;
         border: 1px solid #e0e0e0;
         border-bottom: none;
-        padding: 10px 15px;
+        padding: 8px 10px;
+        flex-grow: 1; /* Mobilde genişliği doldur */
+        text-align: center;
+        font-size: 0.9rem;
     }
     .stTabs [aria-selected="true"] {
         background-color: #ffffff !important;
-        color: #e67e22 !important; /* Turuncu */
+        color: #e67e22 !important;
         border-top: 3px solid #e67e22 !important;
     }
 
-    /* --- HEADER (BAŞLIK) --- */
-    .header-container {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        padding: 2rem;
-        border-radius: 12px;
-        color: white !important;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        margin-bottom: 30px;
-        border-bottom: 5px solid #e67e22;
-        text-align: center;
-    }
-    .header-container h1 { margin: 0; color: white !important; text-shadow: 1px 1px 3px rgba(0,0,0,0.3); }
-    .header-container p { color: #bdc3c7 !important; margin-top: 5px; font-size: 0.9rem; }
-
-    /* --- KARTLAR --- */
+    /* --- 5. KARTLAR --- */
     .disease-card {
         background: white;
         border: 1px solid #eee;
         border-left: 6px solid #e67e22;
         padding: 20px;
         border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        margin-bottom: 25px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
     }
     .ulrich-card {
         background: #fff9db;
@@ -114,60 +144,27 @@ def local_css():
         color: #5d4037 !important;
     }
 
-    /* --- TIMELINE (ADIMLAR) --- */
-    .step-row {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        background: white;
-        border: 1px solid #f0f0f0;
-        margin-bottom: 8px;
-        padding: 10px 15px;
-        border-radius: 8px;
-        transition: transform 0.2s;
-    }
-    .step-row:hover {
-        border-color: #e67e22;
-        transform: translateX(3px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .code-pill {
-        background: #2c3e50;
-        color: #fff !important;
-        font-family: 'Courier New', monospace;
-        font-weight: bold;
-        padding: 5px 12px;
-        border-radius: 5px;
-        min-width: 80px;
-        text-align: center;
-        margin-right: 15px;
-        font-size: 1.1rem;
-    }
-    
-    /* --- SIDEBAR --- */
+    /* --- 6. SIDEBAR --- */
     [data-testid="stSidebar"] {
-        background-color: #f4f6f8 !important;
+        background-color: #f8f9fa !important;
         border-right: 1px solid #e0e0e0;
     }
     [data-testid="stSidebar"] * {
         color: #2c3e50 !important;
     }
-    .stRadio label {
-        color: #2c3e50 !important;
-        font-weight: 600;
+    .sidebar-title {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 20px;
     }
 
-    /* --- DOĞRUDAN KODLAR (METRİK) --- */
+    /* --- 7. DİĞER --- */
+    .step-row { display: flex; flex-wrap: wrap; align-items: center; background: white; border: 1px solid #f0f0f0; margin-bottom: 8px; padding: 10px 15px; border-radius: 8px; }
+    .code-pill { background: #2c3e50; color: #fff !important; font-family: monospace; font-weight: bold; padding: 5px 12px; border-radius: 5px; min-width: 80px; text-align: center; margin-right: 15px; }
     div[data-testid="stMetricValue"] { color: #d35400 !important; font-size: 1.6rem !important; }
-    div[data-testid="metric-container"] { background-color: #fff; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-    /* --- ETİKETLER --- */
-    .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white !important; margin-left: auto; }
-    .bg-blue { background-color: #3498db; }
-    .bg-green { background-color: #27ae60; }
-    .bg-purple { background-color: #9b59b6; }
-    .bg-red { background-color: #e74c3c; }
-
+    
     /* GİZLEME */
     .stDeployButton, footer, header {visibility: hidden;}
     .custom-footer { margin-top: 50px; text-align: center; color: #95a5a6 !important; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 20px; }
@@ -175,10 +172,10 @@ def local_css():
     """, unsafe_allow_html=True)
 
 # =============================================================================
-# 2. VERİTABANI (TAM KAPSAMLI - ULRICH + RAH)
+# 2. VERİTABANI (TAM KAPSAMLI - EKSİKSİZ)
 # =============================================================================
 def get_rah_database():
-    # RAH Source 2 (Syf 104-207) ve Dr. Ulrich Modülü (4.01-4.22)
+    # RAH Source 2 (Ch 18) + Dr. Ulrich (4.01 - 4.22 Tam Liste)
     db = {
         # --- A ---
         "Ağır Metal Detoksu": {
@@ -421,8 +418,7 @@ def get_rah_database():
             "desc": "Ürik asit birikimi.",
             "direct": ["51.50"],
             "compact": ["00.00", "01.00", "02.00", "30.70", "31.10", "35.10", "50.00", "51.10", "51.50", "52.60", "71.11", "71.50", "31.50", "01.00"],
-            "ulrich": [{"code": "4.07", "name": "Asidoz"}]
-        },
+            "ulrich": [{"code": "4.07", "name": "Asidoz"}]},
 
         # --- H ---
         "Herpes (Uçuk)": {
@@ -619,7 +615,6 @@ def get_rah_database():
     return db
 
 def get_program_name(code):
-    # Temel programların isimleri
     names = {
         "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "01.10": "Enerji Yükleme", "01.30": "Ön Kontrol", "01.40": "Çakralar Komple",
         "02.00": "Akupunktur Meridyenleri", "07.21": "Demir Metabolizması",
@@ -638,7 +633,6 @@ def get_duration(code):
     return "5 dk"
 
 def get_category_class(code):
-    # CSS sınıfı döndürür
     if code.startswith("01.") or code.startswith("02."): return "bg-blue" 
     if code.startswith("31.5") or code.startswith("31.6"): return "bg-green" 
     if code.startswith("70."): return "bg-purple" 
@@ -667,7 +661,7 @@ def main():
         except:
             st.markdown("### 🩺 Dr. Sait Sevinç")
 
-        st.markdown("### Biyorezonans Asistanı")
+        st.markdown("<h3 class='sidebar-title'>Dr. Sait SEVİNÇ</h3>", unsafe_allow_html=True)
         st.markdown("---")
         
         st.markdown("#### ⚙️ Cihaz Seçimi")
@@ -681,14 +675,14 @@ def main():
     # --- MAIN CONTENT ---
     st.markdown("""
     <div class="header-container">
-        <h1>🧬 RAH Biyorezonans Asistanı</h1>
-        <p>Dr. Sait Sevinç Kliniği İçin Özel Geliştirilmiştir<br>RAH Kompendium & Dr. Elmar Ulrich Protokolleri</p>
+        <div class="header-title">🧬 RAH Asistanı</div>
+        <div class="header-subtitle">Dr. Sait Sevinç Kliniği</div>
     </div>
     """, unsafe_allow_html=True)
     
     db = get_rah_database()
     
-    # Arama Kutusu
+    # Arama Kutusu (Boşluk Hilesi ile Mobil Uyumlu)
     st.markdown('<h3 style="color:#2c3e50; margin-bottom:10px;">🔎 Rahatsızlık Seçimi</h3>', unsafe_allow_html=True)
     disease_list = sorted(db.keys())
     selected_disease = st.selectbox("Listeden seçim yapınız:", [""] + disease_list)
