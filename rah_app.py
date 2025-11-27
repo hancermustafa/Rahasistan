@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (MOBİL ODAKLI ULTIMATE CSS)
+# 1. GÖRSEL TASARIM (MOBİL & DARK MODE FIX - CSS)
 # =============================================================================
 def local_css():
     st.markdown("""
@@ -71,12 +71,11 @@ def local_css():
     }
     div[role="radiogroup"] label {
         background-color: white;
-        padding: 8px 20px;
+        padding: 5px 15px;
         border-radius: 20px;
         border: 1px solid #ddd;
         cursor: pointer;
         transition: all 0.2s;
-        font-weight: 600;
     }
     div[role="radiogroup"] label:hover {
         border-color: #e67e22;
@@ -107,13 +106,13 @@ def local_css():
     /* --- 5. SEKMELER (TABS) --- */
     .stTabs [data-baseweb="tab-list"] { gap: 4px; flex-wrap: wrap; }
     .stTabs [data-baseweb="tab"] {
-        height: auto; min-height: 45px;
+        height: auto; min-height: 40px;
         background-color: #f1f2f6 !important;
         color: #57606f !important;
         border-radius: 6px 6px 0 0;
         font-weight: 600;
         border: 1px solid #e0e0e0; border-bottom: none;
-        padding: 10px 15px;
+        padding: 8px 10px;
         flex-grow: 1; text-align: center;
     }
     .stTabs [aria-selected="true"] {
@@ -139,29 +138,73 @@ def local_css():
     """, unsafe_allow_html=True)
 
 # =============================================================================
-# 2. VERİTABANI (TAM KAPSAMLI - EKSİKSİZ LİSTE)
+# 2. VERİTABANI (TAM KAPSAMLI - EKSİKSİZ & AÇIK LİSTE)
 # =============================================================================
 def get_rah_database():
-    # Bu liste RAH Kompendium (Source 2) ve Dr. Ulrich Modülü'nün (4.01-4.22) tamamını içerir.
+    # Kaynaklar: RAH Kompendium (Source 1 & 2), Dr. Ulrich (4.01-4.22), Wellbeing Dosyası
     db = {
-        # --- A ---
+        # --- ÖZEL VE YENİ EKLENEN PROTOKOLLER ---
+        "Sigara Bırakma Destek": {
+            "source": "RAH (Syf 207) + Ulrich (4.14)",
+            "desc": "Nikotin bağımlılığı, yoksunluk belirtileri ve detoksifikasyon.",
+            "direct": ["75.16", "75.17"],
+            "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "75.16", "75.17", "48.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.14", "name": "Temizleme (Clearing) - Detoks"}]
+        },
+        "Anti-Aging (Gençleşme)": {
+            "source": "Wellbeing Dosyası + RAH",
+            "desc": "Hücresel yenilenme, cilt elastikiyeti ve vitalite artışı.",
+            "direct": ["30.65", "31.38"],
+            "compact": ["00.00", "01.00", "02.00", "30.65", "31.38", "62.10", "62.50", "64.00", "35.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.06", "name": "Cilt / Saç / Tırnak"}]
+        },
+        "Selülit Tedavisi": {
+            "source": "Wellbeing Dosyası (Syf 4)",
+            "desc": "Bağ dokusu sıkılaştırma, asidoz giderme ve lenf drenajı.",
+            "direct": ["62.50", "36.00"],
+            "compact": ["00.00", "01.00", "02.00", "31.52", "36.00", "37.10", "62.50", "50.00", "31.50", "01.00"],
+            "ulrich": [{"code": "4.07", "name": "Asidoz"}, {"code": "4.14", "name": "Detoks"}]
+        },
+        "Otizm Spektrum Desteği": {
+            "source": "RAH + Ulrich Kombinasyonu",
+            "desc": "Ağır metal temizliği, bağırsak florası ve öğrenme desteği içeren özel kombinasyon.",
+            "direct": ["31.60", "47.00", "54.00"],
+            "compact": ["00.00", "01.00", "02.00", "31.60", "31.50", "47.00", "54.00", "35.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}, {"code": "4.04", "name": "Öğrenme Programı"}]
+        },
+        "Zihinsel Performans / Konsantrasyon": {
+            "source": "Wellbeing Dosyası + Ulrich 4.04",
+            "desc": "Öğrenci ve yoğun çalışanlar için odaklanma ve hafıza artışı.",
+            "direct": ["54.00", "35.20"],
+            "compact": ["00.00", "01.00", "02.00", "31.10", "54.00", "54.10", "35.20", "64.27", "83.80", "31.50", "01.00"],
+            "ulrich": [{"code": "4.04", "name": "Öğrenme / Konsantrasyon"}]
+        },
+        "Jetlag / Bioritim Dengesi": {
+            "source": "Wellbeing Dosyası",
+            "desc": "Seyahat sonrası uyku ve enerji düzenlemesi.",
+            "direct": ["55.20"],
+            "compact": ["00.00", "01.00", "02.00", "01.40", "55.10", "55.20", "64.11", "31.10", "31.50", "01.00"],
+            "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri / Denge"}]
+        },
+        
+        # --- A GRUBU ---
         "Ağır Metal Detoksu": {
             "source": "RAH (Syf 149) + Ulrich (4.14)",
-            "desc": "Vücuttan ağır metallerin atılımı ve detoksifikasyon.",
+            "desc": "Vücuttan ağır metallerin atılımı.",
             "direct": ["31.60", "31.50"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "31.50", "31.60", "31.61", "09.34", "44.10", "48.10", "31.50", "01.00"],
             "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}]
         },
         "Alerji (Genel)": {
             "source": "RAH (Syf 121) + Ulrich (4.01)",
-            "desc": "Alerjik reaksiyonlar, histamin dengesi ve bağışıklık modülasyonu.",
+            "desc": "Alerjik reaksiyonlar ve histamin dengesi.",
             "direct": ["35.20", "64.27"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "34.00", "35.10", "35.20", "36.00", "64.27", "31.50", "01.00"],
             "ulrich": [{"code": "4.01", "name": "Alerji Programı"}, {"code": "4.14", "name": "Temizleme (Clearing)"}]
         },
         "Alzheimer": {
             "source": "RAH (Syf 170) + Ulrich (4.04)",
-            "desc": "Bellek kaybı, kognitif destek ve sinir sistemi rejenerasyonu.",
+            "desc": "Bellek kaybı ve kognitif destek.",
             "direct": ["55.30"],
             "compact": ["00.00", "01.00", "02.00", "31.34", "31.35", "35.10", "70.10", "38.10", "39.10", "50.10", "54.00", "55.30", "55.42", "72.00", "75.10", "31.50", "01.00"],
             "ulrich": [{"code": "4.04", "name": "Öğrenme / Hafıza"}]
@@ -174,7 +217,7 @@ def get_rah_database():
         },
         "Anjin Pektoris": {
             "source": "RAH (Syf 130) + Ulrich (4.18)",
-            "desc": "Göğüs ağrısı, kalp damar sıkışması ve oksijenlenme.",
+            "desc": "Göğüs ağrısı, kalp damar sıkışması.",
             "direct": ["41.40"],
             "compact": ["00.00", "01.00", "02.00", "31.15", "35.10", "38.00", "40.00", "41.40", "41.50", "31.50", "01.00"],
             "ulrich": [{"code": "4.18", "name": "Kalp Programı"}]
@@ -195,16 +238,16 @@ def get_rah_database():
         },
         "Astım (Bronşiyal)": {
             "source": "RAH (Syf 135) + Ulrich (4.20)",
-            "desc": "Solunum zorluğu, bronşların daralması ve alerjik reaksiyonlar.",
+            "desc": "Solunum zorluğu ve hava yolu darlığı.",
             "direct": ["43.20"],
             "compact": ["00.00", "01.00", "02.00", "31.11", "34.00", "35.10", "35.20", "70.16", "36.00", "42.60", "42.70", "43.10", "43.20", "43.30", "31.50", "01.00"],
             "ulrich": [{"code": "4.20", "name": "Astım Programı"}]
         },
 
         # --- B ---
-        "Bağımlılık (Sigara/Alkol)": {
+        "Bağımlılık (Alkol/Madde)": {
             "source": "RAH (Syf 207) + Ulrich (4.14)",
-            "desc": "Bırakma süreci desteği ve detoksifikasyon.",
+            "desc": "Genel bağımlılık tedavisi ve detoks.",
             "direct": ["75.17"],
             "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "48.10", "50.00", "54.10", "64.28", "64.29", "72.05", "75.10", "75.17", "31.50", "01.00"],
             "ulrich": [{"code": "4.14", "name": "Temizleme (Clearing)"}]
@@ -257,7 +300,7 @@ def get_rah_database():
         },
         "Böbrek Yetmezliği": {
             "source": "RAH (Syf 137)",
-            "desc": "Böbrek fonksiyon yetersizliği ve filtrasyon sorunları.",
+            "desc": "Böbrek fonksiyon yetersizliği.",
             "direct": ["45.05"],
             "compact": ["00.00", "01.00", "02.00", "31.23", "31.87", "35.10", "44.10", "44.17", "70.21", "45.05", "45.80", "31.50", "01.00"]
         },
@@ -272,14 +315,14 @@ def get_rah_database():
         },
         "Cilt Sorunları (Akne/Egzama)": {
             "source": "RAH (Syf 181) + Ulrich (4.06)",
-            "desc": "Genel cilt problemleri ve inflamasyon.",
+            "desc": "Genel cilt problemleri.",
             "direct": ["63.10"],
             "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "63.10", "63.20", "31.50", "01.00"],
             "ulrich": [{"code": "4.06", "name": "Cilt / Saç / Tırnak"}]
         },
         "Covid-19 / Long-Covid": {
             "source": "RAH (Syf 137)",
-            "desc": "Viral enfeksiyon sonrası toparlanma ve yorgunluk.",
+            "desc": "Viral enfeksiyon sonrası toparlanma.",
             "direct": ["43.52"],
             "compact": ["00.00", "01.00", "02.00", "31.11", "35.10", "22.93", "70.17", "42.70", "43.10", "43.30", "43.50", "43.52", "31.50", "01.00"],
             "ulrich": [{"code": "90.48", "name": "Enfeksiyon Desteği"}]
@@ -338,7 +381,7 @@ def get_rah_database():
         # --- E ---
         "Elektrosmog / Radyasyon": {
             "source": "Ulrich (4.03) + RAH",
-            "desc": "Elektromanyetik alan yüklemesi (EMF).",
+            "desc": "Elektromanyetik alan yüklemesi.",
             "direct": ["22.00"],
             "compact": ["00.00", "01.00", "02.00", "22.00", "22.10", "22.90", "31.10", "31.50", "01.00"],
             "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon"}]
@@ -488,13 +531,6 @@ def get_rah_database():
             "compact": ["00.00", "01.00", "02.00", "31.41", "35.10", "50.00", "52.00", "52.05", "53.80", "64.00", "64.81", "31.50", "01.00"],
             "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri"}]
         },
-        "Otizm Spektrum Desteği": {
-            "source": "RAH + Ulrich Kombinasyonu",
-            "desc": "Ağır metal temizliği, bağırsak florası ve öğrenme desteği içeren özel kombinasyon.",
-            "direct": ["31.60", "47.00", "54.00"],
-            "compact": ["00.00", "01.00", "02.00", "31.60", "31.50", "47.00", "54.00", "35.10", "31.50", "01.00"],
-            "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}, {"code": "4.04", "name": "Öğrenme Programı"}]
-        },
 
         # --- P ---
         "Parkinson": {
@@ -606,9 +642,9 @@ def get_program_name(code):
         "00.00": "Analiz Hazırlığı", "01.00": "Vitalizasyon Komple", "01.10": "Enerji Yükleme", "01.30": "Ön Kontrol", "01.40": "Çakralar Komple",
         "02.00": "Akupunktur Meridyenleri", "07.21": "Demir Metabolizması",
         "22.00": "Elektrosmog", "22.90": "Radyasyon Yükü", "24.10": "Borreliosis",
-        "31.10": "ATP Üretimi", "31.50": "Temel Detoks", "31.60": "Detoks Karaciğer", "31.81": "Yara İzi Tedavisi",
+        "31.10": "ATP Üretimi", "31.50": "Temel Detoks", "31.51": "Detoks Kan", "31.52": "Detoks Lenf", "31.60": "Detoks Karaciğer", "31.81": "Yara İzi Tedavisi",
         "35.10": "Bağışıklık Artırma", "35.20": "Alerji Temel",
-        "70.45": "Migren Patojen", "70.47": "Tansiyon Düşürme"
+        "70.45": "Migren Patojen", "70.47": "Tansiyon Düşürme", "75.16": "Sigara Bırakma", "75.17": "Yoksunluk Belirtileri"
     }
     if code in names: return names[code]
     if code.startswith("70."): return "Sistem Tedavisi (Kombine)"
