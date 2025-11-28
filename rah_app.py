@@ -1,17 +1,17 @@
 import streamlit as st
 import pandas as pd
 import os
-import urllib.parse 
+import urllib.parse
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (CSS - TURKUAZ KUTU KESİN ÇÖZÜM)
+# 1. GÖRSEL TASARIM (CSS - ÖZEL HTML KUTUSU İLE)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
-    /* --- 1. GENEL AYARLAR --- */
+    /* --- 1. ANA GÖVDE --- */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
         font-family: 'Inter', sans-serif;
@@ -19,26 +19,19 @@ def local_css():
     }
     h1, h2, h3, h4, h5, h6, p, div, span, label, li, button { color: #2c3e50; }
 
-    /* --- 2. KOD BLOĞU (SİYAH EKRAN KESİN ÇÖZÜMÜ) --- */
-    /* Kutunun kendisi */
-    [data-testid="stCodeBlock"] {
-        background-color: #E0F2F1 !important; /* Tıbbi Açık Turkuaz */
-        border: 1px solid #80CBC4 !important;
-        border-radius: 10px !important;
-        padding: 5px !important;
-    }
-    /* Kutunun içindeki her şey (Satırlar, Yazılar) */
-    [data-testid="stCodeBlock"] * {
-        background-color: #E0F2F1 !important; /* Arka planı zorla Turkuaz yap */
-        color: #004D40 !important; /* Yazıyı zorla Koyu Yeşil yap */
-        font-family: 'Courier New', monospace !important;
-        font-weight: 600 !important;
-        text-shadow: none !important;
-    }
-    /* Kopyala Butonu */
-    [data-testid="stCopyButton"] {
-        color: #004D40 !important;
-        background-color: transparent !important;
+    /* --- 2. ÖZEL PROTOKOL KUTUSU (SİYAH EKRAN ÇÖZÜMÜ) --- */
+    .protocol-box {
+        background-color: #E0F2F1 !important; /* Tıbbi Turkuaz */
+        border: 2px solid #009688 !important; /* Koyu Çerçeve */
+        border-radius: 12px;
+        padding: 15px;
+        color: #004D40 !important; /* Koyu Yeşil Yazı */
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+        font-size: 0.95rem;
+        white-space: pre-wrap; /* Satırları koru */
+        margin-bottom: 10px;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     }
 
     /* --- 3. HEADER --- */
@@ -61,7 +54,17 @@ def local_css():
         margin-top: 5px; opacity: 0.9; font-weight: 400;
     }
 
-    /* --- 4. WHATSAPP BUTONU --- */
+    /* --- 4. MOBİL AYARLARI --- */
+    @media only screen and (max-width: 600px) {
+        .header-container { padding: 1rem !important; }
+        .header-title { font-size: 1.4rem !important; }
+        ul[data-baseweb="menu"] { max-height: 250px !important; overflow-y: auto !important; }
+        div[data-baseweb="select"] { margin-bottom: 20px !important; }
+        .spacer-div { height: 250px !important; }
+        .protocol-box { font-size: 0.85rem; }
+    }
+
+    /* --- 5. WHATSAPP BUTONU --- */
     .whatsapp-btn {
         display: block;
         background-color: #25D366;
@@ -72,22 +75,12 @@ def local_css():
         font-weight: bold;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         text-align: center;
-        margin-top: 10px;
         transition: all 0.2s;
     }
     .whatsapp-btn:hover {
         background-color: #128C7E;
-        box-shadow: 0 6px 8px rgba(0,0,0,0.2);
         transform: translateY(-2px);
-    }
-
-    /* --- 5. MOBİL UYUM --- */
-    @media only screen and (max-width: 600px) {
-        .header-container { padding: 1rem !important; }
-        .header-title { font-size: 1.4rem !important; }
-        ul[data-baseweb="menu"] { max-height: 250px !important; overflow-y: auto !important; }
-        div[data-baseweb="select"] { margin-bottom: 20px !important; }
-        .spacer-div { height: 250px !important; }
+        box-shadow: 0 6px 8px rgba(0,0,0,0.2);
     }
 
     /* --- 6. DİĞER BİLEŞENLER --- */
@@ -117,7 +110,7 @@ def local_css():
     li[role="option"]:hover, li[aria-selected="true"] {
         background-color: #fff3e0 !important; color: #d35400 !important; font-weight: bold;
     }
-    
+
     .stTabs [data-baseweb="tab-list"] { gap: 4px; flex-wrap: wrap; }
     .stTabs [data-baseweb="tab"] {
         height: auto; min-height: 40px; background-color: #f1f2f6 !important;
@@ -138,7 +131,6 @@ def local_css():
     .tag { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; color: white !important; margin-left: auto; }
     .bg-blue { background-color: #3498db; } .bg-green { background-color: #27ae60; } .bg-purple { background-color: #9b59b6; } .bg-red { background-color: #e74c3c; }
 
-    /* GİZLEME */
     [data-testid="stSidebar"] { display: none; } 
     .stDeployButton, footer, header { visibility: hidden; }
     .custom-footer { margin-top: 50px; text-align: center; color: #95a5a6 !important; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 20px; }
@@ -146,7 +138,7 @@ def local_css():
     """, unsafe_allow_html=True)
 
 # =============================================================================
-# 2. VERİTABANI (TAM VE KORUNMUŞ)
+# 2. VERİTABANI (TAM VE KORUNMUŞ LİSTE)
 # =============================================================================
 def get_rah_database():
     db = {
@@ -159,6 +151,9 @@ def get_rah_database():
         "Artroz / Kireçlenme": {"source": "RAH (Syf 160) + Ulrich (4.13)", "desc": "Eklem dejenerasyonu.", "direct": ["53.53"], "compact": ["00.00", "01.00", "02.00", "31.40", "31.41", "35.10", "70.28", "52.00", "52.61", "52.62", "53.53", "53.54", "31.50", "01.00"], "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri"}]},
         "Asidoz (Asitlenme)": {"source": "Ulrich 4.07", "desc": "Vücut pH dengesinin bozulması.", "direct": ["31.53"], "compact": ["00.00", "01.00", "02.00", "31.10", "31.53", "06.00", "31.50", "01.00"], "ulrich": [{"code": "4.07", "name": "Asidoz Programı"}]},
         "Astım (Bronşiyal)": {"source": "RAH (Syf 135) + Ulrich 4.20", "desc": "Solunum zorluğu, bronşların daralması.", "direct": ["43.20"], "compact": ["00.00", "01.00", "02.00", "31.11", "34.00", "35.10", "35.20", "70.16", "36.00", "42.60", "42.70", "43.10", "43.20", "43.30", "31.50", "01.00"], "ulrich": [{"code": "4.20", "name": "Astım Programı"}]},
+        "Adet Sancıları (Dismenore)": {"source": "RAH 65.40 + Ulrich", "desc": "Ağrılı adet görme.", "direct": ["65.40"], "compact": ["00.00", "01.00", "02.00", "31.10", "64.00", "65.10", "65.40", "53.83", "31.50", "01.00"], "ulrich": [{"code": "4.08", "name": "Kadın Hormonları"}]},
+
+        # --- B ---
         "Bağımlılık (Alkol/Madde)": {"source": "RAH (Syf 207) + Ulrich 4.14", "desc": "Genel bağımlılık tedavisi.", "direct": ["75.17"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "48.10", "50.00", "54.10", "64.28", "64.29", "72.05", "75.10", "75.17", "31.50", "01.00"], "ulrich": [{"code": "4.14", "name": "Temizleme"}]},
         "Bağışıklık Güçlendirme": {"source": "RAH (Syf 121) + Ulrich 4.03", "desc": "Genel direnç artırma.", "direct": ["35.10"], "compact": ["00.00", "01.00", "02.00", "31.10", "34.00", "35.10", "35.11", "36.50", "31.50", "01.00"], "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon"}, {"code": "90.56", "name": "Bağışıklık Sistemi"}]},
         "Baş Ağrısı": {"source": "RAH (Syf 174) + Ulrich 4.40", "desc": "Genel baş ağrıları.", "direct": ["55.55"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.45", "54.10", "55.55", "72.05", "31.50", "01.00"], "ulrich": [{"code": "4.40", "name": "Baş Ağrısı"}]},
@@ -192,7 +187,7 @@ def get_rah_database():
         "Herpes (Uçuk)": {"source": "RAH (Syf 96) + Ulrich 4.01", "desc": "Herpes Simplex enfeksiyonu.", "direct": ["16.50"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "16.50", "16.51", "63.55", "31.50", "01.00"], "ulrich": [{"code": "4.01", "name": "Enfeksiyon"}]},
         "Hormonal Denge (Kadın)": {"source": "RAH (Syf 186) + Ulrich 4.08", "desc": "Genel hormon düzenleme.", "direct": ["65.10"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.22", "64.00", "65.10", "31.50", "01.00"], "ulrich": [{"code": "4.08", "name": "Kadın Hormon Programı"}]},
         "Hormonal Denge (Erkek)": {"source": "RAH (Syf 186) + Ulrich 4.09", "desc": "Genel hormon düzenleme.", "direct": ["65.20"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.23", "64.00", "65.20", "31.50", "01.00"], "ulrich": [{"code": "4.09", "name": "Erkek Hormon Programı"}]},
-        "Hücresel Dejenerasyon (Tümör Desteği)": {"source": "RAH Kompendium (C-Modülü)", "desc": "Hücresel bütünlüğü destekleme ve bağışıklık aktivasyonu.", "direct": ["19.00", "19.20", "99.00"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "19.00", "19.20", "99.00", "31.50", "31.60", "01.00"], "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}, {"code": "4.03", "name": "Ozon / Radyasyon"}]},
+        "Hücresel Dejenerasyon (Tümör Desteği)": {"source": "RAH Kompendium (C-Modülü) & Ulrich", "desc": "Hücresel bütünlüğü destekleme, bağışıklık aktivasyonu ve tümör eğilimi desteği.", "direct": ["19.00", "19.20", "99.00"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "19.00", "19.20", "99.00", "31.50", "31.60", "01.00"], "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}, {"code": "4.03", "name": "Ozon / Radyasyon Koruma"}]},
         "Jetlag / Seyahat": {"source": "Wellbeing Dosyası", "desc": "Bioritim dengesi ve uyku düzenlemesi.", "direct": ["55.20"], "compact": ["00.00", "01.00", "02.00", "01.40", "55.10", "55.20", "64.11", "31.10", "31.50", "01.00"], "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri / Denge"}]},
         "Kabızlık": {"source": "RAH (Syf 148)", "desc": "Bağırsak hareketliliği sorunu.", "direct": ["47.86"], "compact": ["00.00", "01.00", "02.00", "31.12", "31.16", "35.10", "70.19", "46.00", "47.86", "31.50", "01.00"]},
         "Karaciğer Detoks": {"source": "RAH (Syf 149) + Ulrich 4.14", "desc": "Karaciğer temizliği ve desteği.", "direct": ["48.10", "31.60"], "compact": ["00.00", "01.00", "02.00", "31.29", "35.10", "70.20", "48.10", "49.10", "31.60", "31.50", "01.00"], "ulrich": [{"code": "4.14", "name": "Temizleme / Detoks"}]},
@@ -209,7 +204,7 @@ def get_rah_database():
         "Panik Atak": {"source": "RAH (Syf 169) + Ulrich 4.02", "desc": "Ani korku nöbetleri.", "direct": ["72.05"], "compact": ["00.00", "01.00", "02.00", "31.10", "72.05", "75.10", "54.00", "64.10", "31.50", "01.00"], "ulrich": [{"code": "4.02", "name": "Stres Programı"}]},
         "Parkinson": {"source": "RAH (Syf 170) + Ulrich 4.17", "desc": "Titreme ve hareket bozukluğu.", "direct": ["55.31"], "compact": ["00.00", "01.00", "02.00", "31.34", "31.35", "35.10", "70.68", "38.10", "54.00", "55.31", "64.28", "72.00", "75.10", "31.50", "01.00"], "ulrich": [{"code": "4.17", "name": "Parkinson Programı"}]},
         "Prostat Sorunları": {"source": "RAH (Syf 200) + Ulrich 4.09", "desc": "Prostatit ve büyüme.", "direct": ["69.30"], "compact": ["00.00", "01.00", "02.00", "31.18", "35.10", "70.23", "68.26", "69.10", "69.30", "31.50", "01.00"], "ulrich": [{"code": "4.09", "name": "Erkek Hormonları"}]},
-        "Radyasyon / 5G Koruma": {"source": "Ulrich 4.03 + RAH", "desc": "Elektromanyetik alan yüklemesi.", "direct": ["22.00"], "compact": ["00.00", "01.00", "02.00", "22.00", "22.10", "22.90", "31.10", "31.50", "01.00"], "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon Koruma"}]},
+        "Radyasyon / 5G Koruma": {"source": "Ulrich (4.03)", "desc": "Elektrosmog ve radyasyon detoksu.", "direct": ["22.00"], "compact": ["00.00", "01.00", "02.00", "22.00", "22.10", "22.90", "31.10", "31.50", "01.00"], "ulrich": [{"code": "4.03", "name": "Ozon / Radyasyon Koruma"}]},
         "Romatizma / Artrit": {"source": "RAH (Syf 160) + Ulrich 4.13", "desc": "Eklem iltihabı ve ağrıları.", "direct": ["53.52"], "compact": ["00.00", "01.00", "02.00", "31.40", "31.41", "35.10", "70.28", "52.00", "53.52", "53.53", "53.54", "31.50", "01.00"], "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri"}]},
         "Sedef (Psoriasis)": {"source": "RAH (Syf 181) + Ulrich 4.06", "desc": "Cilt pullanması.", "direct": ["63.10"], "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "62.20", "62.60", "63.10", "72.00", "75.00", "31.50", "01.00"], "ulrich": [{"code": "4.06", "name": "Cilt / Saç"}]},
         "Selülit Tedavisi": {"source": "Wellbeing", "desc": "Bağ dokusu sıkılaştırma.", "direct": ["62.50"], "compact": ["00.00", "01.00", "02.00", "31.52", "36.00", "37.10", "62.50", "50.00", "31.50", "01.00"], "ulrich": [{"code": "4.07", "name": "Asidoz"}, {"code": "4.14", "name": "Detoks"}]},
@@ -323,7 +318,7 @@ def main():
             st.info("**Önerilen Yöntem:** Hazırlık > Enerji > Tedavi > Detoks sıralamasıdır.")
             
             # Metin oluşturma (Kopyalama için)
-            share_text = f"🩺 *Dr. Sait Sevinç - RAH Protokolü*\n\n*Hastalık:* {selected_disease}\n\n*Uygulama Adımları:*\n"
+            share_text = f"🧬 *Dr. Sait Sevinç - RAH Protokolü*\n\n*Hastalık:* {selected_disease}\n\n*Uygulama Adımları:*\n"
             
             total_minutes = 0
             for step_code in data["compact"]:
@@ -359,11 +354,19 @@ def main():
             st.markdown("---")
             st.markdown("##### 📋 Uygulama Adımları")
             
+            # HTML KUTUSU (SİYAH EKRAN FİX)
+            st.markdown(f"""
+            <div class="protocol-box">
+{share_text}
+
+Sağlıklı günler dileriz.
+            </div>
+            """, unsafe_allow_html=True)
+            
             # WhatsApp Linki
             encoded_text = urllib.parse.quote(share_text + "\n\nSağlıklı günler dileriz.")
             whatsapp_url = f"https://wa.me/?text={encoded_text}"
             
-            st.code(share_text + "\n\nSağlıklı günler dileriz.", language="text")
             st.markdown(f'<a href="{whatsapp_url}" target="_blank" class="whatsapp-btn">📲 WhatsApp ile Gönder</a>', unsafe_allow_html=True)
 
 
@@ -408,7 +411,6 @@ def main():
 
     else:
         st.markdown('<div class="custom-footer">Developed for Dr. Sait Sevinç © 2025</div>', unsafe_allow_html=True)
-        # Yasal Uyarı
         with st.expander("⚠️ Yasal Uyarı"):
             st.caption("Bu uygulama sadece eğitim ve bilgilendirme amaçlıdır. Tıbbi tanı veya tedavi yerine geçmez. RAH ve Ulrich protokolleri destekleyici tamamlayıcı tıp uygulamalarıdır.")
 
