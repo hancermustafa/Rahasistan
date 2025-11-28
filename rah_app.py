@@ -1,17 +1,17 @@
 import streamlit as st
 import pandas as pd
 import os
-import urllib.parse
+import urllib.parse 
 
 # =============================================================================
-# 1. GÖRSEL TASARIM (CSS - ÖZEL HTML KUTUSU İLE)
+# 1. GÖRSEL TASARIM (CSS - TURKUAZ KUTU KESİN ÇÖZÜM)
 # =============================================================================
 def local_css():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
-    /* --- 1. ANA GÖVDE --- */
+    /* --- 1. GENEL AYARLAR --- */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff !important;
         font-family: 'Inter', sans-serif;
@@ -19,9 +19,9 @@ def local_css():
     }
     h1, h2, h3, h4, h5, h6, p, div, span, label, li, button { color: #2c3e50; }
 
-    /* --- 2. ÖZEL PROTOKOL KUTUSU (SİYAH EKRAN ÇÖZÜMÜ) --- */
+    /* --- 2. KOD BLOĞU (ÖZEL PROTOKOL KUTUSU) --- */
     .protocol-box {
-        background-color: #E0F2F1 !important; /* Tıbbi Turkuaz */
+        background-color: #E0F2F1 !important; /* Tıbbi Açık Turkuaz */
         border: 2px solid #009688 !important; /* Koyu Çerçeve */
         border-radius: 12px;
         padding: 15px;
@@ -31,7 +31,6 @@ def local_css():
         font-size: 0.95rem;
         white-space: pre-wrap; /* Satırları koru */
         margin-bottom: 10px;
-        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     }
 
     /* --- 3. HEADER --- */
@@ -54,17 +53,7 @@ def local_css():
         margin-top: 5px; opacity: 0.9; font-weight: 400;
     }
 
-    /* --- 4. MOBİL AYARLARI --- */
-    @media only screen and (max-width: 600px) {
-        .header-container { padding: 1rem !important; }
-        .header-title { font-size: 1.4rem !important; }
-        ul[data-baseweb="menu"] { max-height: 250px !important; overflow-y: auto !important; }
-        div[data-baseweb="select"] { margin-bottom: 20px !important; }
-        .spacer-div { height: 250px !important; }
-        .protocol-box { font-size: 0.85rem; }
-    }
-
-    /* --- 5. WHATSAPP BUTONU --- */
+    /* --- 4. WHATSAPP BUTONU --- */
     .whatsapp-btn {
         display: block;
         background-color: #25D366;
@@ -75,12 +64,23 @@ def local_css():
         font-weight: bold;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         text-align: center;
+        margin-top: 10px;
         transition: all 0.2s;
     }
     .whatsapp-btn:hover {
         background-color: #128C7E;
-        transform: translateY(-2px);
         box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+        transform: translateY(-2px);
+    }
+
+    /* --- 5. MOBİL UYUM --- */
+    @media only screen and (max-width: 600px) {
+        .header-container { padding: 1rem !important; }
+        .header-title { font-size: 1.4rem !important; }
+        ul[data-baseweb="menu"] { max-height: 250px !important; overflow-y: auto !important; }
+        div[data-baseweb="select"] { margin-bottom: 20px !important; }
+        .spacer-div { height: 250px !important; }
+        .protocol-box { font-size: 0.85rem; }
     }
 
     /* --- 6. DİĞER BİLEŞENLER --- */
@@ -110,7 +110,7 @@ def local_css():
     li[role="option"]:hover, li[aria-selected="true"] {
         background-color: #fff3e0 !important; color: #d35400 !important; font-weight: bold;
     }
-
+    
     .stTabs [data-baseweb="tab-list"] { gap: 4px; flex-wrap: wrap; }
     .stTabs [data-baseweb="tab"] {
         height: auto; min-height: 40px; background-color: #f1f2f6 !important;
@@ -164,7 +164,7 @@ def get_rah_database():
         "Böbrek Taşı": {"source": "RAH (Syf 140)", "desc": "Nefrolityaz.", "direct": ["45.25"], "compact": ["00.00", "01.00", "02.00", "31.23", "35.10", "44.00", "44.21", "39.65", "45.25", "31.50", "01.00"]},
         "Böbrek Yetmezliği": {"source": "RAH (Syf 137)", "desc": "Böbrek fonksiyon yetersizliği.", "direct": ["45.05"], "compact": ["00.00", "01.00", "02.00", "31.23", "31.87", "35.10", "44.10", "44.17", "70.21", "45.05", "45.80", "31.50", "01.00"]},
         "Cilt Mantarı": {"source": "RAH (Syf 183) + Ulrich 4.05", "desc": "Mikoz enfeksiyonları.", "direct": ["63.50"], "compact": ["00.00", "01.00", "02.00", "30.65", "31.38", "35.10", "70.24", "62.10", "63.50", "31.50", "01.00"], "ulrich": [{"code": "4.05", "name": "Mantar Programı"}]},
-        "Cilt Sorunları (Akne)": {"source": "RAH (Syf 181) + Ulrich 4.06", "desc": "Genel cilt problemleri.", "direct": ["63.10"], "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "63.10", "63.20", "31.50", "01.00"], "ulrich": [{"code": "4.06", "name": "Cilt / Saç"}]},
+        "Cilt Sorunları (Akne/Egzama)": {"source": "RAH (Syf 181) + Ulrich 4.06", "desc": "Genel cilt problemleri.", "direct": ["63.10"], "compact": ["00.00", "01.00", "02.00", "31.38", "30.65", "35.10", "70.24", "62.10", "63.10", "63.20", "31.50", "01.00"], "ulrich": [{"code": "4.06", "name": "Cilt / Saç / Tırnak"}]},
         "Covid-19 / Long-Covid": {"source": "RAH (Syf 137)", "desc": "Viral enfeksiyon sonrası toparlanma.", "direct": ["43.52"], "compact": ["00.00", "01.00", "02.00", "31.11", "35.10", "22.93", "70.17", "42.70", "43.10", "43.30", "43.50", "43.52", "31.50", "01.00"], "ulrich": [{"code": "90.48", "name": "Enfeksiyon Desteği"}]},
         "Crohn Hastalığı": {"source": "RAH (Syf 146)", "desc": "İnflamatuar bağırsak hastalığı.", "direct": ["47.50"], "compact": ["00.00", "01.00", "02.00", "31.12", "31.16", "31.70", "35.10", "70.19", "46.00", "47.50", "64.55", "72.00", "31.50", "01.00"]},
         "Çakra Dengeleme": {"source": "Ulrich 4.13", "desc": "Enerji merkezleri.", "direct": ["01.40"], "compact": ["00.00", "01.00", "01.40", "01.41", "01.42", "01.43", "01.44", "01.45", "01.46", "01.47", "31.50", "01.00"], "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri / Çakra"}]},
@@ -180,7 +180,7 @@ def get_rah_database():
         "Epstein Barr Virüsü (EBV)": {"source": "RAH (Syf 95)", "desc": "Kronik yorgunluk ve viral yük.", "direct": ["16.20"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "16.00", "16.20", "48.10", "36.00", "31.50", "01.00"]},
         "Fibromiyalji": {"source": "RAH (Syf 166) + Ulrich 4.13", "desc": "Yaygın kas ağrıları.", "direct": ["53.84"], "compact": ["00.00", "01.00", "02.00", "31.38", "31.40", "35.10", "70.26", "70.27", "36.00", "52.00", "53.23", "53.25", "53.28", "53.62", "53.84", "62.10", "64.00", "31.50", "01.00"], "ulrich": [{"code": "4.13", "name": "Fizik Sabitleri"}]},
         "Fruktoz İntoleransı": {"source": "RAH (Syf 121)", "desc": "Fruktoz sindirim bozukluğu.", "direct": ["35.30"], "compact": ["00.00", "01.00", "02.00", "09.34", "31.10", "34.00", "35.10", "35.30", "46.40", "46.50", "47.70", "31.50", "01.00"]},
-        "Gastrit / Mide Yanması": {"source": "RAH (Syf 143) + Ulrich 4.07", "desc": "Mide mukozası iltihabı ve reflü.", "direct": ["47.20", "47.10"], "compact": ["00.00", "01.00", "02.00", "31.13", "35.10", "70.19", "46.30", "47.20", "47.10", "31.50", "01.00"], "ulrich": [{"code": "4.07", "name": "Asidoz / Mide"}]},
+        "Gastrit / Mide Yanması": {"source": "RAH (Syf 143) + Ulrich 4.07", "desc": "Mide mukozası iltihabı ve reflü.", "direct": ["47.20"], "compact": ["00.00", "01.00", "02.00", "31.13", "35.10", "70.19", "46.30", "47.20", "47.10", "31.50", "01.00"], "ulrich": [{"code": "4.07", "name": "Asidoz / Mide"}]},
         "Glokom (Göz Tansiyonu)": {"source": "RAH (Syf 176)", "desc": "Göz içi basıncı yüksekliği.", "direct": ["57.30"], "compact": ["00.00", "01.00", "02.00", "31.31", "35.10", "70.12", "56.00", "56.60", "57.10", "57.30", "31.50", "01.00"]},
         "Grip / Enfeksiyon": {"source": "RAH (Syf 82) + Ulrich 4.01", "desc": "Viral enfeksiyonlar.", "direct": ["70.46", "43.11"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.46", "36.00", "42.10", "43.11", "31.50", "01.00"], "ulrich": [{"code": "4.01", "name": "Alerji/Enfeksiyon"}]},
         "Gut Hastalığı": {"source": "RAH (Syf 154) + Ulrich 4.07", "desc": "Ürik asit birikimi.", "direct": ["51.50"], "compact": ["00.00", "01.00", "02.00", "30.70", "31.10", "35.10", "50.00", "51.10", "51.50", "52.60", "71.11", "71.50", "31.50", "01.00"], "ulrich": [{"code": "4.07", "name": "Asidoz"}]},
@@ -216,7 +216,7 @@ def get_rah_database():
         "Tinnitus (Çınlama)": {"source": "RAH (Syf 179) + Ulrich 4.12", "desc": "Kulak çınlaması.", "direct": ["59.10"], "compact": ["00.00", "01.00", "02.00", "31.10", "35.10", "70.15", "38.10", "39.10", "58.30", "58.40", "59.10", "59.40", "72.00", "75.00", "31.50", "01.00"], "ulrich": [{"code": "4.12", "name": "Tinnitus Programı"}]},
         "Tiroid (Dengesizlik)": {"source": "RAH (Syf 188-189) + Ulrich 4.08", "desc": "Hipotiroidi veya Hipertiroidi.", "direct": ["65.33", "65.34"], "compact": ["00.00", "01.00", "02.00", "31.33", "35.10", "70.54", "64.10", "64.20", "64.30", "65.30", "31.50", "01.00"], "ulrich": [{"code": "4.08", "name": "Hormon Programı"}]},
         "Uyku Bozukluğu": {"source": "RAH (Syf 168) + Ulrich 4.02", "desc": "Uykuya dalma ve sürdürme.", "direct": ["55.10", "55.20"], "compact": ["00.00", "01.00", "02.21", "31.10", "35.10", "70.10", "54.00", "55.10", "64.11", "65.30", "72.00", "75.10", "31.50", "01.00"], "ulrich": [{"code": "4.02", "name": "Stres (Uyku Öncesi)"}]},
-        "Yara İzi (Skar) Tedavisi": {"source": "Ulrich 4.22 + RAH", "desc": "Yara izi dokusunun temizlenmesi.", "direct": ["31.81"], "compact": ["00.00", "01.00", "02.00", "31.10", "31.81", "31.80", "70.24", "31.50", "01.00"], "ulrich": [{"code": "4.22", "name": "Skar / Yara İzi"}]},
+        "Yara İzi (Skar) Tedavisi": {"source": "Ulrich (4.22) + RAH", "desc": "Yara izi dokusunun temizlenmesi.", "direct": ["31.81"], "compact": ["00.00", "01.00", "02.00", "31.10", "31.81", "31.80", "70.24", "31.50", "01.00"], "ulrich": [{"code": "4.22", "name": "Skar / Yara İzi"}]},
         "Yüksek Tansiyon": {"source": "RAH (Syf 127) + Ulrich 4.18", "desc": "Hipertansiyon.", "direct": ["39.60"], "compact": ["00.00", "01.00", "02.00", "31.39", "35.10", "70.47", "38.00", "39.10", "39.40", "39.50", "39.60", "64.00", "31.50", "01.00"], "ulrich": [{"code": "4.18", "name": "Kalp Programı"}]}
     }
     return db
@@ -318,7 +318,7 @@ def main():
             st.info("**Önerilen Yöntem:** Hazırlık > Enerji > Tedavi > Detoks sıralamasıdır.")
             
             # Metin oluşturma (Kopyalama için)
-            share_text = f"🧬 *Dr. Sait Sevinç - RAH Protokolü*\n\n*Hastalık:* {selected_disease}\n\n*Uygulama Adımları:*\n"
+            share_text = f"🩺 *Dr. Sait Sevinç - RAH Protokolü*\n\n*Hastalık:* {selected_disease}\n\n*Uygulama Adımları:*\n"
             
             total_minutes = 0
             for step_code in data["compact"]:
@@ -350,24 +350,23 @@ def main():
             # Metne Süre Ekleme
             share_text += f"\n⏱️ *Toplam Süre:* {total_minutes} Dakika"
 
-            # KOPYALAMA ALANI (TURKUAZ KUTU & WHATSAPP)
+            # KOPYALAMA ALANI (COLLAPSIBLE EXPANDER)
             st.markdown("---")
-            st.markdown("##### 📋 Uygulama Adımları")
-            
-            # HTML KUTUSU (SİYAH EKRAN FİX)
-            st.markdown(f"""
-            <div class="protocol-box">
+            with st.expander("📋 Uygulama Adımlarını ve WhatsApp Paylaşımını Aç", expanded=False):
+                # HTML KUTUSU (TURKUAZ FİX)
+                st.markdown(f"""
+                <div class="protocol-box">
 {share_text}
 
 Sağlıklı günler dileriz.
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # WhatsApp Linki
-            encoded_text = urllib.parse.quote(share_text + "\n\nSağlıklı günler dileriz.")
-            whatsapp_url = f"https://wa.me/?text={encoded_text}"
-            
-            st.markdown(f'<a href="{whatsapp_url}" target="_blank" class="whatsapp-btn">📲 WhatsApp ile Gönder</a>', unsafe_allow_html=True)
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # WhatsApp Linki
+                encoded_text = urllib.parse.quote(share_text + "\n\nSağlıklı günler dileriz.")
+                whatsapp_url = f"https://wa.me/?text={encoded_text}"
+                
+                st.markdown(f'<a href="{whatsapp_url}" target="_blank" class="whatsapp-btn">📲 WhatsApp ile Gönder</a>', unsafe_allow_html=True)
 
 
         # --- TAB 2: DOĞRUDAN KODLAR ---
@@ -411,6 +410,7 @@ Sağlıklı günler dileriz.
 
     else:
         st.markdown('<div class="custom-footer">Developed for Dr. Sait Sevinç © 2025</div>', unsafe_allow_html=True)
+        # Yasal Uyarı
         with st.expander("⚠️ Yasal Uyarı"):
             st.caption("Bu uygulama sadece eğitim ve bilgilendirme amaçlıdır. Tıbbi tanı veya tedavi yerine geçmez. RAH ve Ulrich protokolleri destekleyici tamamlayıcı tıp uygulamalarıdır.")
 
